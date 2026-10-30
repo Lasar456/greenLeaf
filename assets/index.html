@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#15b970">
+<title>GreenLeaf — Mobile App with Billing</title>
+<style>
+:root{--ink:#111318;--sub:#777b87;--muted:#9a9ba6;--surface:#fff;--canvas:#f6f6f8;--line:#ecebf0;--green:#19c66b;--green-dark:#08894b;--lime:#b9e946;--purple:#a64ce8;--violet:#8f65e5;--blue:#5895e6;--rose:#ee866e;--dark:#211a34;--shadow:0 8px 28px rgba(45,40,60,.035)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'Inter Display','Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink)}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid var(--green);outline-offset:2px}.ico{width:20px;height:20px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.ico.sm{width:16px;height:16px}.ico.lg{width:22px;height:22px}.ico.xl{width:25px;height:25px}
+body{background:radial-gradient(ellipse at 78% 17%,#eae9f1 0%,#cecadc 65%,#c1bdd1 100%)}
+.demo-layout{max-width:1120px;min-height:100vh;margin:auto;display:flex;align-items:center;justify-content:center;gap:100px;padding:34px 30px}
+.showcase{width:420px;flex:none;align-self:center}.eyebrow{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#595368;display:flex;gap:8px;align-items:center}.eyebrow i{width:8px;height:8px;background:var(--green);border-radius:50%}.showcase h1{font-size:53px;line-height:1.09;font-weight:500;letter-spacing:-2.8px;margin:16px 0 19px}.showcase h1 em{font-style:normal;color:#13ad60}.showcase p{font-size:15px;line-height:1.8;color:#666274;margin:0 0 28px;max-width:375px}.showcase .tags{display:flex;gap:8px;flex-wrap:wrap}.showcase .tags span{background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.8);font-size:11px;padding:10px 12px;border-radius:12px;color:#464151}.instruction{display:flex;gap:11px;align-items:center;color:#625e70;font-size:12px;margin-top:34px}.instruction svg{color:#159b58}
+.device{position:relative;background:var(--canvas);width:410px;height:864px;flex:0 0 410px;border:8px solid #161b1c;border-radius:46px;overflow:hidden;box-shadow:0 34px 65px rgba(39,31,55,.21),0 3px 5px rgba(22,19,26,.12);isolation:isolate}
+.status-bar{height:29px;background:var(--canvas);display:flex;align-items:center;justify-content:space-between;padding:9px 28px 0;font-size:12px;font-weight:690;letter-spacing:-.2px}.system-icons{display:flex;align-items:center;gap:6px}.system-icons svg{width:16px;height:13px;fill:#101317}.system-icons .battery{width:19px;height:10px;border:1.7px solid #111;border-radius:3px;position:relative}.system-icons .battery:before{content:'';position:absolute;inset:2px;background:#111;border-radius:1px}.system-icons .battery:after{content:'';position:absolute;right:-3px;top:2px;height:3px;width:2px;background:#111;border-radius:1px}
+.topbar{height:76px;background:var(--canvas);padding:8px 18px 12px;display:flex;justify-content:space-between;align-items:center}.brand{display:flex;gap:8px;align-items:center;min-width:0}.brand-leaf{width:29px;height:35px;flex:none}.brand-name{font-size:22px;letter-spacing:-1.2px;font-weight:770;line-height:1}.brand-name span{color:#14ba62}.brand-sub{color:#82848e;font-size:9.5px;line-height:1.2;margin-top:6px;max-width:170px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.header-actions{display:flex;gap:8px;align-items:center}.round-btn{border:1px solid #ebeaf0;display:grid;place-items:center;width:36px;height:36px;background:#fff;border-radius:50%;color:#30333d;position:relative}.round-btn .notify{width:6px;height:6px;background:#f06f72;border:1.2px solid #fff;position:absolute;top:6px;right:6px;border-radius:50%}.avatar{display:grid;place-items:center;border-radius:50%;width:36px;height:36px;font-size:12px;background:#dcf6e6;border:1px solid #c5ebd7;color:#0b7a42;font-weight:700}
+.scroller{height:calc(100% - 76px - 75px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;padding:0 18px 28px}.scroller::-webkit-scrollbar{display:none}.page{display:none;animation:fadeUp .21s ease-out}.page.active{display:block}@keyframes fadeUp{from{opacity:.65;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.welcome{padding:15px 1px 0}.date{font-size:10px;color:#81828d;text-transform:uppercase;font-weight:500;letter-spacing:.028em}.welcome h2,.screen-head h2{font-weight:440;font-size:29px;letter-spacing:-1.15px;line-height:1.15;margin:7px 0 5px}.welcome .subtext,.screen-head .subtext{font-size:11.5px;color:#777b85;margin:0;line-height:1.5}.connection{display:inline-flex;align-items:center;gap:6px;background:#e6f9eb;color:#11794b;border-radius:8px;font-size:10px;padding:7px 9px;margin:17px 0 18px;font-weight:570}.connection:before{content:'';width:6px;height:6px;border-radius:50%;background:#1abf67}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:13px 14px 14px;min-height:105px;box-shadow:var(--shadow)}.kpi-top{display:flex;align-items:center;justify-content:space-between;gap:6px;color:#787b86;font-size:11px}.kpi-top .ico{width:16px;height:16px}.kpi-value{font-size:27px;font-weight:490;letter-spacing:-1.15px;color:#0e1014;margin-top:10px;line-height:1}.kpi-bottom{margin-top:9px;font-size:10px;color:#898a96}.pill{font-size:9px;line-height:1;display:inline-flex;border-radius:5px;padding:5px 7px;font-weight:580;white-space:nowrap}.pill.purple{background:#9164e5;color:#fff}.pill.lime{background:#bcf14a;color:#27360d}.pill.navy{background:#271c3b;color:#fff}.pill.coral{background:#eb8166;color:#fff}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:23px 0 12px;gap:6px}.section-head h3{font-size:16px;font-weight:620;letter-spacing:-.45px;margin:0}.section-head .section-sub{font-size:10px;color:#9596a0;margin-top:4px}.text-action{font-size:11px;color:#777382;border:0;background:none;display:inline-flex;gap:6px;align-items:center;white-space:nowrap;padding:6px 0}.text-action .ico{width:13px;height:13px}
+.quick-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.quick{border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:9px;font-size:10px;font-weight:520;color:#393b43}.quick-icon{width:32px;height:32px;border-radius:11px;display:grid;place-items:center}.quick-icon.gr{background:#e3f9eb;color:#148a51}.quick-icon.pp{background:#f0e7fc;color:#9252d8}.quick-icon.bl{background:#e7f1fd;color:#4b88d2}.quick-icon.or{background:#fff1e6;color:#d78243}
+.panel{border:1px solid var(--line);border-radius:19px;background:#fff;padding:15px;box-shadow:var(--shadow)}.panel-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:7px}.panel-heading h3{font-size:15px;font-weight:620;letter-spacing:-.45px;margin:0 0 3px}.panel-heading p{font-size:10px;color:#92939d;margin:0}.toggle-group{display:flex;gap:3px;border-radius:9px;background:#f4f3f7;padding:3px}.mini-toggle{font-size:10px;color:#8d8998;border:1px solid transparent;background:transparent;border-radius:7px;padding:6px 8px}.mini-toggle.active{background:#fff;color:#241b38;border-color:#e9e6ed;box-shadow:0 2px 4px rgba(37,34,50,.04)}
+.chart{margin-top:20px;position:relative;padding:2px 0 0 25px}.chart-plot{height:128px;display:flex;align-items:end;justify-content:space-around;position:relative;border-bottom:1px solid #e4e3e9;background:repeating-linear-gradient(to top,transparent 0, transparent 41px,#eeedf1 42px,#eeedf1 43px)}.chart-y{position:absolute;left:-24px;color:#adaab5;font-size:9px;bottom:0;transform:translateY(50%)}.chart-y.y1{bottom:33%}.chart-y.y2{bottom:66%}.chart-y.y3{bottom:100%}.bar-col{height:100%;display:flex;align-items:end;justify-content:center;gap:2px;flex:1;position:relative;z-index:1}.bar{width:8px;min-height:2px;border-radius:4px 4px 0 0;transition:height .2s ease;display:block}.bar.sent{background:linear-gradient(#af5df0,#d9b5f5)}.bar.delivered{background:linear-gradient(#b2e741,#ddf5aa)}.bar.read{background:#7eaeeb}.bar.failed{background:#f2968c}.month-labels{display:flex;justify-content:space-around;padding:9px 0 0}.month-labels span{flex:1;text-align:center;font-size:9px;color:#8e8999}.chart-legend{display:flex;gap:12px;justify-content:space-between;margin-top:19px}.legend-item{font-size:9px;color:#777581;display:flex;gap:5px;align-items:center}.legend-item i{width:7px;height:7px;border-radius:50%;display:block}.legend-item.sent i{background:#ab5ceb}.legend-item.delivered i{background:#b7e546}.legend-item.read i{background:#72a8ed}.legend-item.failed i{background:#ec8d80}.data-note{font-size:9px;color:#91919d;margin-top:14px;display:flex;align-items:center;gap:7px}.data-note i{width:6px;height:6px;border-radius:50%;background:var(--lime)}
+.campaign-card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:9px}.campaign-head{display:flex;justify-content:space-between;gap:10px;align-items:start}.campaign-head strong{font-size:12px;font-weight:625;line-height:1.3}.campaign-head small{font-size:10px;color:#92939c;display:block;margin-top:4px}.badge{font-size:9px;font-weight:550;border-radius:8px;background:#fff4dd;color:#b57a23;padding:6px 9px;white-space:nowrap}.badge.completed{color:#0f8c55;background:#e9f9ee}.badge.scheduled{color:#6950b9;background:#f1ebff}.campaign-progress{display:flex;align-items:center;gap:10px;margin:15px 0 4px}.progress-track{height:8px;background:#eae9ed;flex:1;overflow:hidden;border-radius:0}.progress-fill{height:100%;background:linear-gradient(90deg,#d4b0f3,#a049e4);border-radius:0}.progress-num{font-size:11px;color:#4f4a57;font-weight:560;min-width:32px;text-align:right}.campaign-foot{display:flex;justify-content:space-between;margin-top:13px;padding-top:12px;border-top:1px solid #f0eff2;font-size:10px;color:#8a8995}.campaign-foot b{color:#25262f;font-weight:640}
+.support{background:#111b1a;color:white;border-radius:18px;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;overflow:hidden;position:relative}.support:after{content:'';width:90px;height:90px;border:1px solid rgba(67,220,138,.26);border-radius:50%;position:absolute;right:50px;top:-35px}.support h3{font-weight:520;font-size:13px;margin:0 0 5px}.support p{font-size:10px;color:#a7b9b1;margin:0 0 13px}.support strong{font-size:30px;font-weight:480;letter-spacing:-1px;display:block;margin-bottom:4px}.support button{background:#b5f16c;border:0;color:#183419;border-radius:9px;font-size:10px;font-weight:650;padding:11px 13px;position:relative;z-index:1;white-space:nowrap}
+.screen-head{padding:15px 2px 17px}.screen-head h2{font-size:30px;margin-bottom:7px}.screen-head .row{display:flex;align-items:center;justify-content:space-between}.filled-btn{display:inline-flex;align-items:center;gap:6px;border:0;background:#b8ef57;color:#18321c;padding:10px 12px;border-radius:10px;font-size:10px;font-weight:700}.filled-btn .ico{width:14px;height:14px}.searchbox{background:#fff;border:1px solid var(--line);border-radius:13px;display:flex;align-items:center;gap:10px;padding:0 12px;height:43px;color:#9997a2;margin-bottom:13px}.searchbox input{min-width:0;flex:1;border:0;outline:0!important;background:transparent;color:#1d1c21;font-size:12px}.searchbox input::placeholder{color:#aba8b2}.segmented{display:flex;align-items:center;gap:5px;padding:4px;background:#eae9ee;border-radius:12px;margin-bottom:15px}.segmented button{border:0;background:transparent;color:#7d7886;font-size:10px;border-radius:9px;padding:10px 12px;flex:1;white-space:nowrap}.segmented button.active{background:#fff;color:#15151b;box-shadow:0 2px 4px #332c4010;font-weight:620}
+.campaign-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:13px 0 2px;margin-top:8px;border-top:1px solid #eeedf0}.campaign-detail div{text-align:center;border-right:1px solid #eceaf0}.campaign-detail div:last-child{border:0}.campaign-detail strong{font-size:14px;display:block;font-weight:590}.campaign-detail small{color:#8d8c95;font-size:9px}
+.inbox-summary{background:#e8f8ed;border:1px solid #d7f3e2;border-radius:14px;padding:13px 15px;display:flex;align-items:center;gap:12px;margin-bottom:15px}.inbox-summary .big{font-size:28px;font-weight:500;letter-spacing:-1px;color:#168b55}.inbox-summary .summ-text{font-size:10px;color:#4a8365;line-height:1.55}.inbox-summary strong{font-size:12px;color:#1b3d2e;display:block}
+.chat-list{background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden}.chat{display:flex;gap:11px;padding:14px 13px;border:0;background:transparent;width:100%;text-align:left;border-bottom:1px solid #f1f0f4;align-items:center;color:inherit}.chat:last-child{border-bottom:0}.chat-avatar{width:41px;height:41px;border-radius:14px;background:#ece9f7;color:#7762a4;display:grid;place-items:center;font-size:13px;font-weight:660;flex:none}.chat-avatar.gr{background:#e1f7ea;color:#269e64}.chat-avatar.bl{background:#e9f2fb;color:#4688c9}.chat-body{flex:1;min-width:0}.chat-name{font-size:12px;font-weight:640;display:flex;align-items:center;justify-content:space-between}.chat-name time{font-size:9px;color:#9d99a4;font-weight:400}.chat-preview{font-size:10px;color:#8b8b96;margin-top:6px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.chat-tail{display:flex;justify-content:space-between;align-items:center;margin-top:7px}.chat-tail span{font-size:9px;color:#93919b}.unread{border-radius:50%;width:17px;height:17px;display:grid;place-items:center;background:#1fc76c;color:#fff;font-size:9px;font-weight:680}
+.conversation{display:none;height:100%;flex-direction:column;background:#f5f5f8}.conversation.open{display:flex}.conversation-top{display:flex;align-items:center;gap:10px;padding:12px 15px;background:white;border-bottom:1px solid var(--line)}.conversation-top strong{display:block;font-size:12px}.conversation-top small{font-size:10px;color:#87938f}.icon-plain{border:0;background:none;color:inherit;padding:5px}.conversation-messages{flex:1;overflow-y:auto;padding:22px 18px;display:flex;flex-direction:column;gap:12px}.bubble{max-width:85%;padding:12px 13px;border-radius:14px;background:#fff;color:#282a30;font-size:12px;line-height:1.55;box-shadow:0 3px 12px #4444}.bubble.me{align-self:end;background:#dbf8e4;border-bottom-right-radius:5px}.bubble.them{align-self:start;border-bottom-left-radius:5px}.bubble small{font-size:9px;color:#8c8c93;display:block;text-align:right;margin-top:6px}.reply-bar{display:flex;align-items:center;gap:8px;padding:12px 14px 17px;background:#fff;border-top:1px solid var(--line)}.reply-bar input{border:1px solid #ededf2;border-radius:23px;padding:12px 13px;font-size:12px;flex:1;min-width:0;outline:0;background:#f9f9fb}.send-button{border:0;background:#19c66b;color:white;border-radius:50%;height:40px;width:40px;display:grid;place-items:center}.send-button .ico{width:18px;height:18px}
+.lead-summary{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:15px}.lead-summary .summarybox{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px}.summarybox strong{font-size:24px;font-weight:540;display:block;letter-spacing:-1px}.summarybox span{font-size:10px;color:#888994}.lead-list{background:white;border:1px solid var(--line);border-radius:16px;overflow:hidden}.lead-row{padding:14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0eff2}.lead-row:last-child{border:0}.lead-row .person{width:37px;height:37px;border-radius:12px;background:#f1eff6;display:grid;place-items:center;font-size:11px;color:#777080;font-weight:640}.lead-row .details{flex:1}.lead-row strong{font-size:11px;font-weight:650;display:block}.lead-row small{color:#9d9ca4;font-size:9.5px;display:block;margin-top:5px}.consent{font-size:9px;padding:6px 7px;border-radius:7px;background:#e7faed;color:#12884a;white-space:nowrap}.consent.off{background:#fff0f0;color:#d07370}.consent.pending{background:#f1f0f5;color:#7f7c89}
+.more-header{background:linear-gradient(140deg,#132622,#154e35);border-radius:18px;padding:18px;color:#fff;display:flex;gap:12px;align-items:center;margin:2px 0 17px}.more-header .avatar{width:46px;height:46px;font-size:16px}.more-header strong{display:block;font-size:15px}.more-header p{font-size:10px;color:#b2d2be;margin:6px 0 0}.more-group{margin-bottom:17px;background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line)}.more-label{text-transform:uppercase;font-size:10px;letter-spacing:.09em;color:#85808e;margin:17px 2px 9px}.more-link{border:0;border-bottom:1px solid #f0eff3;background:#fff;width:100%;padding:14px 14px;display:flex;align-items:center;gap:12px;text-align:left;color:#292b31;font-size:12px}.more-link:last-child{border-bottom:0}.more-link .mi{width:33px;height:33px;background:#f3f2f6;border-radius:10px;display:grid;place-items:center;color:#57515f}.more-link .mi .ico{width:17px;height:17px}.more-link .arrow{margin-left:auto;color:#9895a0}
+.bottom-nav{position:absolute;bottom:0;left:0;right:0;height:75px;border-top:1px solid #e9e8ed;background:rgba(255,255,255,.98);display:grid;grid-template-columns:repeat(5,1fr);padding:10px 9px 14px;z-index:5}.nav-item{border:0;background:none;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:5px;color:#9a98a5;font-size:9px;font-weight:510;position:relative;padding:0}.nav-item.active{color:#0b9551;font-weight:660}.nav-item .nav-icon{display:grid;place-items:center;width:41px;height:31px;border-radius:11px}.nav-item.active .nav-icon{background:#e7f8ed}.nav-item .ico{width:20px;height:20px}.nav-item .nav-dot{background:#ff677b;color:#fff;border:2px solid #fff;border-radius:11px;position:absolute;right:14px;top:-4px;min-width:17px;line-height:15px;font-size:8px}
+.modal-overlay{position:absolute;inset:0;z-index:20;background:rgba(17,18,27,.45);display:none;align-items:end}.modal-overlay.show{display:flex}.sheet{width:100%;background:white;border-radius:25px 25px 0 0;padding:12px 22px 33px;box-shadow:0 -12px 40px rgba(0,0,0,.1)}.sheet-handle{width:34px;height:4px;background:#dbdae1;border-radius:3px;margin:0 auto 21px}.sheet h3{margin:0 0 9px;font-size:20px;font-weight:590;letter-spacing:-.6px}.sheet p{font-size:12px;color:#7d7c89;line-height:1.6;margin:0 0 20px}.sheet-btn{width:100%;border:0;background:#b8ee53;padding:14px;border-radius:12px;color:#19361d;font-weight:680;font-size:12px}.sheet-close{position:absolute;right:18px;top:18px;border:0;background:none;color:#777}.toast{position:absolute;top:114px;left:30px;right:30px;background:#1e2a23;color:white;padding:12px;border-radius:13px;box-shadow:0 6px 30px #10182122;z-index:18;font-size:11px;text-align:center;opacity:0;pointer-events:none;transform:translateY(-10px);transition:.25s}.toast.show{opacity:1;transform:none}
+@media(max-width:950px){.demo-layout{gap:30px}.showcase{width:315px}.showcase h1{font-size:42px}}
+@media(max-width:750px){.demo-layout{display:block;padding:0;min-height:100dvh}.showcase{display:none}.device{width:100%;height:100dvh;height:100vh;max-width:none;flex:initial;border:0;border-radius:0;box-shadow:none}.status-bar{padding-top:9px}.scroller{height:calc(100% - 76px - 75px)}}
+@media(max-width:345px){.brand-name{font-size:19px}.kpi{padding:11px}.quick{font-size:9px}.quick-row{gap:5px}.bar{width:6px}.chart-legend{gap:7px}.legend-item{font-size:8px}}
+
+/* Blinkit-inspired mobile header: oversized workspace name, cash-balance orb and circular profile.
+   The user's own GreenLeaf emerald palette replaces Blinkit's brand styling. */
+.status-bar{
+  background:linear-gradient(110deg,#20c77c,#0a9b5c 60%,#0a7e4c) !important;
+  color:#fff !important;
+  position:relative;z-index:2;
+}
+.status-bar .system-icons svg{fill:white !important}
+.status-bar .battery{border-color:#fff !important}
+.status-bar .battery:before,.status-bar .battery:after{background:#fff !important}
+.topbar{
+  height:128px !important;
+  padding:17px 16px 19px !important;
+  background:linear-gradient(112deg,#20c77c 0%,#0bab62 51%,#087f4b 100%) !important;
+  border-radius:0 0 23px 23px;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  gap:10px !important;
+}
+.topbar:before{
+  content:"";position:absolute;width:255px;height:255px;
+  right:-95px;top:-142px;border:1px solid rgba(255,255,255,.15);
+  border-radius:50%;pointer-events:none;z-index:-1;
+  box-shadow:0 0 0 31px rgba(255,255,255,.035),0 0 0 68px rgba(255,255,255,.022);
+}
+.topbar:after{
+  content:"";position:absolute;left:-40px;bottom:-83px;width:210px;height:130px;
+  background:radial-gradient(ellipse,rgba(169,255,103,.24),transparent 70%);
+  pointer-events:none;z-index:-1;
+}
+.blinkit-workspace{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:7px}
+.blinkit-business{
+  color:#fff;
+  font-size:27px;
+  font-weight:850;
+  line-height:1.05;
+  letter-spacing:-1.2px;
+  white-space:nowrap;
+  text-shadow:0 1px 1px rgba(0,0,0,.04);
+}
+.blinkit-location{
+  display:inline-flex;align-items:center;gap:5px;
+  color:#f1fff5;background:transparent;border:none;padding:2px 0;
+  width:max-content;max-width:100%;font-size:15px;line-height:1;
+  font-weight:660;letter-spacing:.015em;
+}
+.blinkit-location svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.blinkit-actions{display:flex;gap:11px !important;align-items:center;flex-shrink:0}
+.blinkit-wallet{
+  display:flex;position:relative;border:0;padding:0;
+  background:transparent;align-items:center;justify-content:flex-start;
+  flex:0 0 60px;width:60px;height:79px;
+}
+.blinkit-wallet-disc{
+  display:grid;place-items:center;width:60px;height:60px;border-radius:50%;
+  background:#20232c;border:2px solid rgba(255,255,255,.1);
+  box-shadow:0 4px 0 rgba(0,0,0,.1),inset 0 0 0 2px rgba(255,255,255,.045);
+}
+.wallet-cash{height:45px;width:45px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.18))}
+.blinkit-wallet-balance{
+  display:grid;place-items:center;position:absolute;
+  bottom:0;left:0;width:60px;height:27px;
+  border-radius:18px;background:#292b33;border:2px solid #424550;
+  color:white;font-size:20px;line-height:1;font-weight:800;letter-spacing:-.5px;
+  box-shadow:0 3px 5px rgba(0,0,0,.1);
+}
+.blinkit-avatar{
+  color:white;background:#22252d;border:2px solid rgba(255,255,255,.16);
+  border-radius:50%;width:53px;height:53px;display:grid;place-items:center;
+  box-shadow:0 4px 0 rgba(0,0,0,.12);padding:0;flex:none;
+}
+.blinkit-avatar svg{width:33px;height:33px}
+.blinkit-wallet:active,.blinkit-avatar:active{transform:scale(.96)}
+.scroller{height:calc(100% - 128px - 75px) !important;padding-top:7px}
+.toast{top:174px}
+@media(max-width:750px){
+  .scroller{height:calc(100% - 128px - 75px) !important}
+}
+@media(max-width:375px){
+  .topbar{padding-left:12px !important;padding-right:12px !important;gap:6px !important}
+  .blinkit-business{font-size:clamp(19px,6.5vw,25px);letter-spacing:-1px}
+  .blinkit-location{font-size:13px}
+  .blinkit-actions{gap:7px !important}
+  .blinkit-wallet{width:54px;flex-basis:54px}
+  .blinkit-wallet-disc{width:54px;height:54px}
+  .blinkit-wallet-balance{width:54px}
+  .blinkit-avatar{width:46px;height:46px}
+  .blinkit-avatar svg{width:29px;height:29px}
+}
+
+/* Compact shared mobile header: preserve Blinkit-style hierarchy without wasting height. */
+.topbar{
+  height:78px !important;
+  padding:7px 15px 11px !important;
+  border-radius:0 0 16px 16px !important;
+  gap:10px !important;
+  min-height:0 !important;
+}
+.topbar:before{width:184px;height:184px;right:-70px;top:-108px}
+.topbar:after{bottom:-101px;opacity:.55}
+.blinkit-workspace{gap:4px}
+.blinkit-business{font-size:clamp(19px,5.5vw,23px) !important;font-weight:810;letter-spacing:-.65px}
+.blinkit-location{font-size:11px !important;gap:5px;padding:0 !important;line-height:1.1}
+.blinkit-location svg{width:12px;height:12px}
+.blinkit-actions{gap:9px !important}
+.blinkit-wallet{height:56px;width:48px;flex:0 0 48px}
+.blinkit-wallet-disc{height:46px;width:46px;border-width:1.5px}
+.wallet-cash{height:32px;width:32px}
+.blinkit-wallet-balance{
+  height:20px;width:48px;bottom:0;left:0;
+  font-size:13px;font-weight:770;letter-spacing:-.25px;
+  border-width:1.5px;
+}
+.blinkit-avatar{width:42px;height:42px;border-width:1.5px}
+.blinkit-avatar svg{width:26px;height:26px}
+.scroller{height:calc(100% - 78px - 75px) !important;padding-top:8px}
+.toast{top:119px !important}
+.home-summary-head{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;margin:2px 1px 12px;
+}
+.home-summary-head h2{
+  font-size:19px;line-height:1.2;letter-spacing:-.55px;
+  font-weight:650;margin:0;color:#181b22;
+}
+.home-connected{
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+  font-size:10px;font-weight:560;color:#128052;
+  background:#e8f8ed;border-radius:8px;padding:6px 9px;
+}
+.home-connected i{width:6px;height:6px;border-radius:50%;background:#20bd6a;flex:none}
+#screen-home .kpi-grid{margin-top:0}
+@media(max-width:750px){
+  .scroller{height:calc(100% - 78px - 75px) !important}
+}
+@media(max-width:345px){
+  .topbar{padding:7px 11px 11px !important;gap:5px !important}
+  .blinkit-business{font-size:18px !important}
+  .blinkit-actions{gap:6px !important}
+  .blinkit-wallet{width:44px;flex-basis:44px}
+  .blinkit-wallet-disc{width:43px;height:43px}
+  .blinkit-wallet-balance{width:44px}
+  .blinkit-avatar{width:39px;height:39px}
+}
+
+
+/* Compact native-app page headers: no duplicated eyebrow/subtitle, content starts immediately */
+#screen-campaigns .compact-screen-head,
+#screen-inbox .compact-screen-head,
+#screen-leads .compact-screen-head,
+#screen-more .compact-screen-head {
+  padding: 5px 1px 12px;
+}
+.compact-screen-head .row { min-height:35px; gap:10px; }
+.compact-screen-head h2 {
+  color:#15171c;
+  font-size:23px;
+  font-weight:650;
+  letter-spacing:-.75px;
+  line-height:1.15;
+  margin:0;
+}
+.compact-screen-head .filled-btn {
+  padding:9px 13px;
+  border-radius:10px;
+  min-height:34px;
+  font-size:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.inline-count {
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;font-weight:600;color:#13824d;
+  padding:8px 10px;border-radius:9px;background:#e7f8ed;
+  white-space:nowrap;
+}
+.inline-count i {width:6px;height:6px;border-radius:50%;background:#23bf73;}
+#screen-more .more-label:first-of-type {margin-top:2px;}
+#screen-more .more-group {margin-bottom:14px;}
+#screen-more .more-link {padding:12px 14px;}
+#screen-inbox .searchbox,
+#screen-campaigns .searchbox,
+#screen-leads .searchbox { margin-top:0; }
+
+
+/* -----------------------------------------------------------
+   GreenLeaf status colors matched to the reference screenshots.
+   Only green semantic status indicators are affected.
+   Main brand header, action buttons, layouts and interactions are untouched.
+   ----------------------------------------------------------- */
+:root {
+  --status-green-bg: #E8F8ED;       /* Connected / active / subscribed */
+  --status-green-text: #128052;     /* dark green on mint surface */
+  --status-green-dot: #20BD6A;      /* small circular indicator */
+  --status-green-solid: #1FC76C;    /* unread count */
+  --status-lime-bg: #BCF14A;        /* Delivered */
+  --status-lime-text: #27360D;
+}
+.home-connected,
+.inline-count,
+.connection,
+.lead-row .consent:not(.off):not(.pending),
+.badge.completed {
+  background-color: var(--status-green-bg) !important;
+  color: var(--status-green-text) !important;
+  border-color: transparent;
+}
+.home-connected i,
+.inline-count i,
+.connection::before {
+  background-color: var(--status-green-dot) !important;
+}
+.unread {
+  background-color: var(--status-green-solid) !important;
+  color: #fff !important;
+}
+.pill.lime {
+  background-color: var(--status-lime-bg) !important;
+  color: var(--status-lime-text) !important;
+}
+
+
+/* Inbox list polish: shorter conversation cards with cleaner baselines. */
+#screen-inbox .chat-list .chat {
+  padding:9px 12px;
+  gap:11px;
+  min-height:68px;
+  align-items:center;
+}
+#screen-inbox .chat-list .chat-avatar {
+  width:40px;
+  height:40px;
+  border-radius:13px;
+  font-size:12px;
+  font-weight:680;
+}
+#screen-inbox .chat-list .chat-body {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:0;
+  gap:0;
+}
+#screen-inbox .chat-list .chat-name {
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:8px;
+  font-size:12px;
+  font-weight:650;
+  line-height:15px;
+}
+#screen-inbox .chat-list .chat-name time {
+  flex-shrink:0;
+  font-size:9px;
+  line-height:12px;
+  font-weight:420;
+}
+#screen-inbox .chat-list .chat-preview {
+  margin-top:3px;
+  font-size:10.5px;
+  line-height:14px;
+}
+#screen-inbox .chat-list .chat-tail {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  min-height:17px;
+  margin-top:3px;
+  line-height:15px;
+}
+#screen-inbox .chat-list .chat-tail > span:first-child {
+  font-size:10px;
+  font-weight:610;
+  color:#757984;
+  line-height:15px;
+}
+#screen-inbox .chat-list .unread {
+  flex:0 0 18px;
+  width:18px;
+  height:18px;
+  line-height:1;
+  font-weight:700;
+}
+
+
+/* Refined compact app header: smaller type, balanced wallet/profile sizes.
+   All controls and their existing click interactions are preserved. */
+.topbar{
+  height:68px !important;
+  min-height:68px !important;
+  padding:8px 14px 10px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:10px !important;
+  border-radius:0 0 15px 15px !important;
+}
+.topbar:before{width:168px;height:168px;right:-67px;top:-115px}
+.blinkit-workspace{flex:1 1 auto;min-width:0;gap:4px !important;align-self:center}
+.blinkit-business{
+  font-size:19px !important;
+  font-weight:760 !important;
+  letter-spacing:-.48px !important;
+  line-height:1.15 !important;
+  white-space:nowrap;
+}
+.blinkit-location{
+  font-size:10px !important;
+  font-weight:630 !important;
+  gap:4px !important;
+  line-height:1.2 !important;
+  padding:0 !important;
+  min-height:16px;
+}
+.blinkit-location svg{width:11px !important;height:11px !important;stroke-width:2.2}
+.blinkit-actions{
+  flex:0 0 auto;
+  gap:9px !important;
+  align-items:center !important;
+  justify-content:flex-end;
+}
+.blinkit-wallet{
+  width:40px !important;
+  flex:0 0 40px !important;
+  height:47px !important;
+  justify-content:center !important;
+  align-self:center;
+}
+.blinkit-wallet-disc{
+  width:39px !important;
+  height:39px !important;
+  border-width:1.4px !important;
+  box-shadow:0 2px 0 rgba(0,0,0,.10),inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.wallet-cash{width:25px !important;height:25px !important;filter:drop-shadow(0 1px 1px rgba(0,0,0,.14))}
+.blinkit-wallet-balance{
+  height:16px !important;
+  width:38px !important;
+  bottom:0 !important;
+  left:1px !important;
+  border-radius:12px !important;
+  border-width:1px !important;
+  font-size:10px !important;
+  font-weight:780 !important;
+  line-height:1 !important;
+  letter-spacing:0 !important;
+  box-shadow:0 2px 3px rgba(0,0,0,.10);
+}
+.blinkit-avatar{
+  width:38px !important;
+  height:38px !important;
+  border-width:1.5px !important;
+  align-self:center;
+  box-shadow:0 2px 0 rgba(0,0,0,.1);
+}
+.blinkit-avatar svg{width:22px !important;height:22px !important;}
+.scroller{height:calc(100% - 68px - 75px) !important; padding-top:8px}
+.toast{top:80px !important}
+@media(max-width:345px){
+  .topbar{padding:8px 11px 10px !important;gap:7px !important;}
+  .blinkit-business{font-size:17px !important;}
+  .blinkit-location{font-size:9px !important;}
+  .blinkit-actions{gap:7px !important;}
+  .blinkit-wallet{width:38px !important;flex-basis:38px !important;}
+  .blinkit-wallet-disc{width:37px !important;height:37px !important;}
+  .blinkit-wallet-balance{width:36px !important;}
+  .blinkit-avatar{width:36px !important;height:36px !important;}
+  .blinkit-avatar svg{width:21px !important;height:21px !important;}
+}
+
+
+/* Smaller wallet + profile controls: targeted change, no other layout edits. */
+.blinkit-actions{gap:7px !important;}
+.blinkit-wallet{
+  width:33px !important;flex:0 0 33px !important;
+  height:40px !important;
+}
+.blinkit-wallet-disc{
+  width:32px !important;height:32px !important;
+  border-width:1px !important;
+}
+.wallet-cash{width:20px !important;height:20px !important;}
+.blinkit-wallet-balance{
+  width:32px !important;height:14px !important;
+  left:0 !important;bottom:0 !important;
+  font-size:9px !important;border-width:1px !important;
+}
+.blinkit-avatar{
+  width:32px !important;height:32px !important;
+  border-width:1px !important;
+}
+.blinkit-avatar svg{width:18px !important;height:18px !important;}
+@media(max-width:345px){
+  .blinkit-actions{gap:6px !important;}
+  .blinkit-wallet{width:31px !important;flex-basis:31px !important;}
+  .blinkit-wallet-disc{width:30px !important;height:30px !important;}
+  .blinkit-wallet-balance{width:30px !important;}
+  .blinkit-avatar{width:30px !important;height:30px !important;}
+  .blinkit-avatar svg{width:17px !important;height:17px !important;}
+}
+
+/* Meta Ads: distinct blue infinity brand-style icon instead of a megaphone. */
+.quick-icon.meta-ads-icon{background:#e8f2ff;color:#0866ff}
+.quick-icon .meta-infinity{display:block;width:27px;height:22px;overflow:visible;flex-shrink:0}
+
+/* Billing 2.0: mobile-native GreenLeaf aesthetic, not the desktop Billing styling.
+   Only elements within #screen-billing are affected. */
+#screen-billing {padding-bottom:28px; --b-purple:#8f5be6; --b-ink:#211a33; --b-soft:#f2edfc; --b-line:#eae8f0}
+#screen-billing.bill-secondary .bill-summary,#screen-billing.bill-secondary .bill-overview-row{display:none}
+#screen-billing .bill-titlebar{display:flex;align-items:center;gap:10px;margin:0 0 14px;padding:4px 0 4px}
+#screen-billing .bill-titlebar h2{margin:0;flex:1;font-size:23px;font-weight:620;line-height:1.25;letter-spacing:-.8px;color:#15141b}
+#screen-billing .bill-back{width:34px;height:34px;display:grid;place-items:center;border:1px solid #ebe9ef;border-radius:11px;background:white;color:#25202c;flex:none}
+#screen-billing .bill-title-tag{font-size:10px;font-weight:570;background:#f0edf5;border-radius:8px;padding:7px 9px;color:#716680}
+#screen-billing .bill-summary{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(118deg,#2c233e 0%,#3a2b55 80%,#4d3278 100%);color:#fff;border:0;border-radius:20px;padding:18px 18px 15px;box-shadow:0 10px 25px #44305c15}
+#screen-billing .bill-summary:before{content:'';position:absolute;right:-61px;top:-125px;width:226px;height:226px;border:1px solid #ffffff1a;border-radius:50%;box-shadow:0 0 0 30px #ffffff08,0 0 0 64px #ffffff06;z-index:-1}
+#screen-billing .bill-summary-top{display:flex;align-items:center;gap:7px;font-size:10px;color:#c7badc;letter-spacing:.035em}
+#screen-billing .bill-summary-top .bill-orb{width:22px;height:22px;background:#ad8af03b;color:#d9c0ff;border-radius:7px;display:grid;place-items:center}
+#screen-billing .bill-summary-top .bill-orb svg{width:13px;height:13px}
+#screen-billing .bill-summary-mid{display:flex;align-items:center;gap:9px;margin:15px 0 9px}
+#screen-billing .bill-summary-mid strong{font-size:29px;line-height:1;font-weight:620;letter-spacing:-1px}
+#screen-billing .bill-mini-pill{background:#765ba7;color:#f8efff;border:1px solid #ffffff14;padding:5px 8px;border-radius:7px;font-size:10px;font-weight:550}
+#screen-billing .bill-summary-detail{font-size:11px;color:#c7bcda;line-height:1.45;margin-bottom:18px}
+#screen-billing .bill-summary-bottom{border-top:1px solid #ffffff28;padding-top:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+#screen-billing .bill-renew-meta{display:flex;flex-direction:column;gap:4px;min-width:0}
+#screen-billing .bill-renew-meta span{font-size:9px;color:#c3b9d3}
+#screen-billing .bill-renew-meta strong{font-size:12px;color:#fff;font-weight:600}
+#screen-billing .bill-renew-meta em{font-size:10px;color:#c1b6d2;font-style:normal;font-weight:400}
+#screen-billing .bill-manage-btn{display:inline-flex;align-items:center;gap:5px;background:#bcf14a;color:#1f2916;border:0;border-radius:9px;padding:10px 11px;font-size:10px;font-weight:720;white-space:nowrap;flex:none}
+#screen-billing .bill-manage-btn svg{width:14px;height:14px}
+#screen-billing .bill-overview-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0 0}
+#screen-billing .bill-overview-card{background:#fff;border:1px solid var(--b-line);box-shadow:var(--shadow);border-radius:16px;padding:13px 12px 12px;min-width:0;min-height:130px}
+#screen-billing .bill-overview-label{display:flex;align-items:center;gap:6px;color:#7c7988;font-size:10px;font-weight:560;white-space:nowrap}
+#screen-billing .bill-overview-icon{display:grid;place-items:center;background:#f1eafb;color:#8f5be6;width:24px;height:24px;border-radius:9px;flex:none}
+#screen-billing .bill-overview-icon .ico{width:14px;height:14px}
+#screen-billing .bill-overview-value{font-size:26px;letter-spacing:-.85px;font-weight:570;color:#16141e;margin-top:12px;line-height:1;font-variant-numeric:tabular-nums}
+#screen-billing .bill-overview-caption{font-size:10px;color:#9a98a3;margin-top:5px;line-height:1.35}
+#screen-billing .bill-overview-footer{display:flex;align-items:center;justify-content:space-between;margin-top:13px;gap:5px}
+#screen-billing .bill-inline-action{background:#f2edfc;color:#7e4cc5;border:none;border-radius:7px;padding:6px 8px;font-size:9.5px;font-weight:650;white-space:nowrap}
+#screen-billing .bill-overview-usage-track{height:6px;background:#f0eef4;border-radius:2px;overflow:hidden;margin-top:19px}
+#screen-billing .bill-overview-usage-track>div{height:100%;background:linear-gradient(90deg,#cca6f6,#9860e8);border-radius:2px}
+#screen-billing .bill-usage-percent{font-size:10px;color:#8d839c}
+#screen-billing .bill-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:#eeedf2;padding:4px;border-radius:12px;margin:14px 0 18px}
+#screen-billing .bill-tabs button{border:0;background:transparent;border-radius:9px;color:#898594;padding:10px 3px;font-size:11px;font-weight:560}
+#screen-billing .bill-tabs button.selected{color:#242035;background:#fff;box-shadow:0 1px 5px #1512200d;font-weight:680}
+#screen-billing .bill-tab-panel{display:none}
+#screen-billing .bill-tab-panel.active{display:block}
+#screen-billing .bill-section-head{display:flex;justify-content:space-between;align-items:center;margin:0 1px 13px;gap:8px}
+#screen-billing .bill-section-head h3{font-size:16px;letter-spacing:-.35px;font-weight:660;margin:0;color:#17151f}
+#screen-billing .bill-section-head p{font-size:10px;color:#94919e;margin:4px 0 0}
+#screen-billing .bill-section-icon{color:#8f5be6;background:#f0e9fc;padding:7px;border-radius:10px;display:grid;place-items:center}
+#screen-billing .bill-section-icon .ico{width:17px;height:17px}
+#screen-billing .bill-period{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:9px 0;margin:0 0 5px;border:0;background:transparent}
+#screen-billing .bill-period>span{font-size:10px;font-weight:570;color:#777483}
+#screen-billing .bill-period>div{background:#edebf2;padding:3px;display:flex;gap:2px;border-radius:9px}
+#screen-billing .bill-period button{background:transparent;color:#8d8899;padding:6px 8px;border:0;border-radius:7px;font-size:9px}
+#screen-billing .bill-period button.selected{background:#fff;box-shadow:0 2px 4px #1b15200b;color:#2d2737;font-weight:660}
+#screen-billing .bill-plan-option{background:#fff;border:1px solid #ece9f1;border-radius:16px;padding:14px;margin:9px 0;box-shadow:0 4px 16px #20192c06;position:relative;overflow:hidden}
+#screen-billing .bill-plan-option.current{border:1px solid #d4b8f7;background:#fcfaff}
+#screen-billing .bill-option-head{display:flex;align-items:center;justify-content:space-between;gap:9px}
+#screen-billing .bill-option-head h4{font-size:16px;font-weight:650;letter-spacing:-.4px;margin:0;line-height:1.2}
+#screen-billing .bill-current-tag{font-size:8px;display:inline-block;background:#efe5fc;color:#854bcb;border-radius:5px;padding:4px 6px;letter-spacing:0;font-weight:700;margin-top:6px}
+#screen-billing .bill-option-price{white-space:nowrap;text-align:right}
+#screen-billing .bill-option-price strong{font-size:20px;color:#17141e;font-weight:600;letter-spacing:-.6px;font-variant-numeric:tabular-nums}
+#screen-billing .bill-option-price small{display:block;color:#a19ca9;font-size:9px;margin-top:2px}
+#screen-billing .bill-option-summary{display:flex;flex-wrap:wrap;gap:5px;margin:13px 0 11px}
+#screen-billing .bill-option-summary span{padding:6px 7px;font-size:9px;border-radius:6px;background:#f5f4f8;color:#706a79;white-space:nowrap}
+#screen-billing .bill-features-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 1px 10px;color:#716b7d;font-size:10px;font-weight:550;border:0;border-top:1px solid #f0edf5;background:transparent}
+#screen-billing .bill-features-toggle>.ico,#screen-billing .bill-history-row>.ico{transform:rotate(90deg);transition:transform .15s}
+#screen-billing .bill-features-toggle[aria-expanded=true]>.ico,#screen-billing .bill-history-row[aria-expanded=true]>.ico{transform:rotate(-90deg)}
+#screen-billing .bill-features{padding:1px 0 7px}
+#screen-billing .bill-features p{display:flex;gap:7px;align-items:flex-start;margin:8px 0;color:#7c7688;font-size:10px;line-height:1.5}
+#screen-billing .bill-features p:before{content:'✓';color:#9464dd;font-weight:800;flex:none}
+#screen-billing .bill-plan-cta{width:100%;height:37px;background:#bef052;color:#202a15;font-weight:680;font-size:11px;border:none;border-radius:10px}
+#screen-billing .bill-plan-cta.current{background:#eee6f9;color:#7650ab}
+#screen-billing .bill-rate-link{background:#fff;border:1px solid #eae7f0;border-radius:12px;width:100%;display:flex;align-items:center;gap:10px;padding:13px;color:#5e566e;font-size:11px;font-weight:550;margin:13px 0 3px}
+#screen-billing .bill-rate-link .ico:first-child{color:#9164db}
+#screen-billing .bill-rate-link .ico:last-child{margin-left:auto}
+#screen-billing .bill-addon{background:#fff;border:1px solid #ece9f1;border-radius:16px;padding:15px;margin-bottom:10px;display:flex;gap:11px;box-shadow:var(--shadow)}
+#screen-billing .bill-addon-icon{width:34px;height:34px;background:#f2eafb;color:#8c59dd;border-radius:11px;display:grid;place-items:center;flex:none}
+#screen-billing .bill-addon-main{flex:1;min-width:0}
+#screen-billing .bill-addon h4{margin:1px 0 6px;font-size:13px;color:#292431;font-weight:660}
+#screen-billing .bill-addon-count{font-size:12px;color:#201a31;font-weight:690}
+#screen-billing .bill-addon-count span{font-size:9px;color:#95909e;font-weight:460;text-transform:none}
+#screen-billing .bill-addon p{font-size:10px;line-height:1.55;color:#8d8896;margin:8px 0 11px}
+#screen-billing .bill-addon-track{height:5px;border-radius:2px;background:#f0edf5;overflow:hidden;margin:10px 0 12px}
+#screen-billing .bill-addon-track>i{display:block;height:100%;background:#9c68e8}
+#screen-billing .bill-addon-bottom{border-top:1px solid #efedf4;padding-top:11px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+#screen-billing .bill-addon-bottom strong{font-size:11px;color:#29202e;font-weight:650}
+#screen-billing .bill-addon-bottom strong small{color:#9995a0;font-weight:400;font-size:9px}
+#screen-billing .bill-addon-bottom button{background:#bff052;color:#27300e;border-radius:8px;border:0;padding:9px 11px;font-size:10px;font-weight:670;white-space:nowrap}
+#screen-billing .bill-history-card{background:#fff;border:1px solid #ece9f1;border-radius:15px;overflow:hidden;margin-bottom:9px}
+#screen-billing .bill-history-row{background:transparent;border:0;width:100%;padding:14px;display:flex;align-items:center;gap:10px;text-align:left}
+#screen-billing .bill-history-icon{display:grid;place-items:center;width:33px;height:33px;border-radius:10px;color:#8850d3;background:#efe6fa;flex:none}
+#screen-billing .bill-history-row>span:nth-child(2){flex:1}
+#screen-billing .bill-history-row strong{display:block;color:#2b2532;font-weight:640;font-size:12px}
+#screen-billing .bill-history-row small{display:block;color:#9b97a4;font-size:10px;margin-top:4px}
+#screen-billing .bill-history-row>.ico{color:#a9a4b3}
+#screen-billing .bill-history-body{padding:0 14px 14px}
+#screen-billing .bill-empty{font-size:10px;color:#817b8b;border-top:1px solid #efedf4;padding-top:13px;line-height:1.5}
+#screen-billing .bill-footnote,#screen-billing .bill-demo-caption{color:#a49fab;font-size:9px;line-height:1.5;margin:13px 4px}
+@media(max-width:355px){#screen-billing .bill-summary{padding:15px}#screen-billing .bill-overview-card{padding:11px 9px}#screen-billing .bill-overview-value{font-size:23px}#screen-billing .bill-period button{padding:6px 5px}}
+
+/* Mobile Billing: integrated title + billing cycle, compact, vertically centered */
+#screen-billing .bill-plans-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;margin:3px 1px 14px;min-height:38px;
+}
+#screen-billing .bill-plans-toolbar h3{
+  margin:0;white-space:nowrap;flex:0 1 auto;
+  font-size:16px;line-height:1.2;font-weight:670;
+  letter-spacing:-.4px;color:#201b2b;
+}
+#screen-billing .bill-plans-toolbar .bill-period{
+  display:flex;align-items:center;flex:0 0 auto;
+  padding:0;margin:0;border:0;background:transparent;
+}
+#screen-billing .bill-plans-toolbar .bill-period>div{
+  display:flex;align-items:center;gap:2px;
+  padding:4px;background:#eae9ef;border-radius:12px;
+}
+#screen-billing .bill-plans-toolbar .bill-period button{
+  border:0;background:transparent;color:#888290;
+  font-size:10px;font-weight:540;line-height:1.15;
+  padding:8px 9px;border-radius:9px;white-space:nowrap;
+}
+#screen-billing .bill-plans-toolbar .bill-period button.selected{
+  background:#fff;color:#3f3159;font-weight:710;
+  box-shadow:0 2px 5px rgba(34,23,53,.08);
+}
+@media(max-width:355px){
+  #screen-billing .bill-plans-toolbar{gap:4px;}
+  #screen-billing .bill-plans-toolbar h3{font-size:14px;letter-spacing:-.5px;}
+  #screen-billing .bill-plans-toolbar .bill-period>div{padding:3px;gap:1px;}
+  #screen-billing .bill-plans-toolbar .bill-period button{font-size:9px;padding:7px 6px;}
+}
+
+
+/* Final header refinement: slightly taller, balanced and compact.
+   Preserve the entire mobile app and functionality. */
+.topbar{
+  height:82px !important;
+  min-height:82px !important;
+  padding:12px 17px 14px !important;
+  border-radius:0 0 19px 19px !important;
+  gap:12px !important;
+  background:linear-gradient(112deg,#1bc678 0%,#0eb268 51%,#078b55 100%) !important;
+  box-shadow:0 3px 12px rgba(4,100,58,.09);
+}
+.topbar:before{
+  width:173px !important;
+  height:173px !important;
+  right:-70px !important;
+  top:-118px !important;
+  border-color:rgba(255,255,255,.11) !important;
+  box-shadow:0 0 0 26px rgba(255,255,255,.027),0 0 0 59px rgba(255,255,255,.017) !important;
+}
+.topbar:after{opacity:.34 !important;bottom:-110px !important}
+.blinkit-workspace{gap:5px !important;justify-content:center}
+.blinkit-business{
+  font-size:20px !important;
+  font-weight:760 !important;
+  letter-spacing:-.56px !important;
+  line-height:1.12 !important;
+}
+.blinkit-location{
+  font-size:10px !important;
+  line-height:1.2 !important;
+  font-weight:650 !important;
+  letter-spacing:.025em !important;
+  min-height:15px !important;
+}
+.blinkit-location svg{width:11px !important;height:11px !important;}
+.blinkit-actions{gap:10px !important;align-items:center !important}
+.blinkit-wallet{width:36px !important;flex:0 0 36px !important;height:43px !important;}
+.blinkit-wallet-disc{width:34px !important;height:34px !important;}
+.wallet-cash{width:20px !important;height:20px !important;}
+.blinkit-wallet-balance{
+  width:36px !important;height:15px !important;
+  left:0 !important;bottom:0 !important;
+  font-size:9px !important;
+  letter-spacing:-.15px !important;
+  background:#22272b !important;
+  border-color:#3d4747 !important;
+}
+.blinkit-avatar{
+  width:34px !important;height:34px !important;
+  border-color:rgba(255,255,255,.18) !important;
+}
+.blinkit-avatar svg{width:18px !important;height:18px !important}
+.scroller{height:calc(100% - 82px - 75px) !important;padding-top:8px}
+.toast{top:94px !important}
+@media(max-width:750px){
+  .scroller{height:calc(100% - 82px - 75px) !important}
+}
+@media(max-width:345px){
+  .topbar{padding:12px 12px 14px !important;gap:7px !important}
+  .blinkit-business{font-size:18px !important}
+  .blinkit-actions{gap:7px !important}
+  .blinkit-wallet{width:34px !important;flex-basis:34px !important;height:41px !important}
+  .blinkit-wallet-disc{width:32px !important;height:32px !important}
+  .blinkit-wallet-balance{width:34px !important;height:14px !important;font-size:8.5px !important}
+  .blinkit-avatar{width:32px !important;height:32px !important}
+}
+
+
+/* ===== Remove desktop-software green accents across the app =====
+   Keep only: top header green + semantic status greens requested by user.
+   Shift general UI accents to the app palette (purple / navy / lime / neutral).
+*/
+:root{
+  --accent:#8f65e5;
+  --accent-dark:#6e46c8;
+  --accent-soft:#f1ebff;
+  --accent-line:#e8ddff;
+}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent) !important;outline-offset:2px}
+/* general decorative/brand green replaced by accent, but status greens stay below */
+.showcase .eyebrow i,.instruction svg{background:var(--accent) !important;color:var(--accent) !important}
+.showcase h1 em,.brand-name span{color:var(--accent) !important}
+/* home overview / section accents */
+.home-summary-head h2,.section-head h3,.panel-heading h3,.screen-head h2{color:#15161c}
+/* support box should not use desktop green */
+.support{
+  background:linear-gradient(145deg,#20192f,#151724 68%,#1f2231) !important;
+  color:#fff !important;
+}
+.support:after{border-color:rgba(157,116,241,.24) !important}
+.support p{color:#b2afc0 !important}
+.support button{background:var(--lime) !important;color:#1c2711 !important}
+/* generic action buttons */
+.filled-btn,.sheet-btn,#screen-billing .bill-manage-btn{
+  background:var(--accent) !important;
+  color:#fff !important;
+}
+/* quick action first card should not look green-led unless semantic */
+.quick-icon.gr{background:var(--accent-soft) !important;color:var(--accent-dark) !important}
+/* toggles and selected states */
+.mini-toggle.active,
+.bill-tabs button.selected,
+#screen-billing .bill-period button.selected{
+  color:#241b38 !important;
+  border-color:#e7defa !important;
+  box-shadow:0 2px 4px rgba(37,34,50,.05) !important;
+}
+/* nav active uses app palette rather than desktop green */
+.nav-item.active{
+  color:#fff !important;
+  background:linear-gradient(180deg,#9d74f1,#855ee0) !important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12) !important;
+}
+.nav-item.active .ico{color:#fff !important}
+/* campaign statuses and pills */
+.badge.completed{background:#f0eaff !important;color:#6e46c8 !important}
+.badge.scheduled{background:#f1ebff !important;color:#6c53bc !important}
+/* billing screen restyle away from desktop green */
+#screen-billing {
+  --b-purple:#8f65e5;
+  --b-soft:#f4efff;
+  --b-line:#ede7f7;
+}
+#screen-billing .bill-membership{
+  background:linear-gradient(145deg,#9a74ef 0%, #8258df 100%) !important;
+  color:#fff !important;
+}
+#screen-billing .bill-membership .bill-topline,
+#screen-billing .bill-membership .bill-meta,
+#screen-billing .bill-membership .bill-inline-label,
+#screen-billing .bill-membership .bill-countdown,
+#screen-billing .bill-membership .bill-subline,
+#screen-billing .bill-membership .bill-price-note{color:rgba(255,255,255,.92) !important}
+#screen-billing .bill-membership .bill-mini-pill{
+  background:rgba(255,255,255,.22) !important;
+  color:#fff !important;
+}
+#screen-billing .bill-overview-card .bill-icon-wrap{background:#f4efff !important;color:var(--accent-dark) !important}
+#screen-billing .bill-overview-card .bill-value-note{color:#8b8696 !important}
+#screen-billing .bill-tabs{background:#f4f2f8 !important}
+#screen-billing .bill-tabs button.selected{background:#fff !important;color:#241b38 !important}
+#screen-billing .bill-period button.selected{background:#fff !important;color:#241b38 !important}
+#screen-billing .bill-option.current{border-color:#cebfff !important;box-shadow:0 0 0 1px #cebfff inset, var(--shadow) !important}
+#screen-billing .bill-current-tag{background:var(--accent) !important;color:#fff !important}
+#screen-billing .bill-option-btn{background:var(--accent) !important;color:#fff !important;border-color:transparent !important}
+#screen-billing .bill-option-btn.secondary{background:#fff !important;color:#645c77 !important;border-color:#e7e2f0 !important}
+#screen-billing .bill-rate-link{color:var(--accent-dark) !important}
+#screen-billing .bill-addon-figure strong{color:#17151f !important}
+#screen-billing .bill-addon-btn{background:var(--accent-soft) !important;color:var(--accent-dark) !important;border-color:#e6dcff !important}
+#screen-billing .bill-addon-btn.primary{background:var(--accent) !important;color:#fff !important}
+#screen-billing .history-icon{background:var(--accent-soft) !important;color:var(--accent-dark) !important}
+/* avoid random green text from desktop reference */
+#screen-billing .bill-link,#screen-billing .bill-inline-link,.linkish{color:var(--accent-dark) !important}
+/* keep requested semantic greens untouched */
+.connection,.home-connected,.contact-state.subscribed,.pill.lime,.delivered-pill,
+.unread-dot,.unread-badge,.contact-chip.active,.header-connected,
+#screen-billing .bill-status-chip{
+}
+
+
+/* Premium mobile bottom navigation — clean white, gentle icon pill, no solid selection tile. */
+.bottom-nav{
+  height:75px !important;
+  display:grid !important;
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  align-items:center !important;
+  gap:0 !important;
+  padding:5px 8px 9px !important;
+  background:#fff !important;
+  border-top:1px solid #eae8ee !important;
+  box-shadow:0 -7px 20px rgba(31,26,45,.045) !important;
+  overflow:visible;
+}
+.bottom-nav .nav-item,
+.bottom-nav .nav-item.active{
+  -webkit-tap-highlight-color:transparent;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:4px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  min-width:0;
+  height:59px !important;
+  width:100% !important;
+  padding:2px 0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  color:#9695a2 !important;
+  box-shadow:none !important;
+  font-size:10px !important;
+  font-weight:500 !important;
+  line-height:1 !important;
+}
+.bottom-nav .nav-icon{
+  display:grid !important;
+  place-items:center !important;
+  flex:0 0 34px;
+  width:46px !important;
+  height:34px !important;
+  background:transparent !important;
+  border:1px solid transparent !important;
+  border-radius:13px !important;
+  transition:background .15s ease,color .15s ease;
+}
+.bottom-nav .nav-item .ico{
+  width:22px !important;
+  height:22px !important;
+  color:#9695a2 !important;
+  stroke-width:1.8 !important;
+}
+.bottom-nav .nav-label{display:block;font-size:10px;white-space:nowrap;letter-spacing:0;line-height:1.15}
+.bottom-nav .nav-item.active{color:#6c47be !important;font-weight:660 !important;}
+.bottom-nav .nav-item.active .nav-icon{
+  background:#f2ecff !important;
+  border-color:#eee5ff !important;
+}
+.bottom-nav .nav-item.active .ico{color:#7955d3 !important;stroke-width:2.05 !important;}
+.bottom-nav .nav-item:active .nav-icon{background:#f6f2ff !important;}
+.bottom-nav .nav-dot{
+  position:absolute !important;
+  top:1px !important;
+  left:calc(50% + 10px) !important;
+  right:auto !important;
+  width:17px !important;
+  height:17px !important;
+  min-width:17px !important;
+  border:2px solid #fff !important;
+  border-radius:50% !important;
+  background:#fc617b !important;
+  color:#fff !important;
+  font-size:9px !important;
+  font-weight:700 !important;
+  display:grid !important;
+  place-items:center !important;
+  line-height:1 !important;
+  padding:0 !important;
+}
+
+
+/* Restore old lime CTA color for small action buttons like + New / Import */
+.filled-btn{
+  background:#BCF14A !important;
+  color:#1f2c11 !important;
+  box-shadow:none !important;
+}
+.filled-btn .ico{color:inherit !important}
+.filled-btn:active{transform:translateY(0.5px)}
+
+
+/* Soft transparent lime chips: preserve the original subtle status-badge look. */
+.home-connected,
+.inline-count,
+.lead-row .consent:not(.off):not(.pending) {
+  background: rgba(188, 241, 74, .17) !important; /* #BCF14A at 17% opacity */
+  color: #547819 !important;
+  border-color: transparent !important;
+}
+.home-connected i,
+.inline-count i {
+  background: #94CA29 !important;
+}
+
+
+/* Restore original lime CTA appearance to bottom-sheet confirmation buttons. */
+#modalOverlay .sheet .sheet-btn {
+  background: #BCF14A !important;
+  color: #253410 !important;
+  box-shadow: none !important;
+}
+#modalOverlay .sheet .sheet-btn:active { background: #aedf40 !important; }
+
+/* Collapsing app header: it fades/slides away on downward page scroll,
+   then returns when the user scrolls upward. Retains the current layout. */
+.device > .topbar {
+  transition: transform 430ms cubic-bezier(.22,.65,.26,1),
+              opacity 430ms ease, visibility 430ms ease;
+  will-change: transform, opacity;
+}
+.device > .scroller {
+  transition: margin-top 430ms cubic-bezier(.22,.65,.26,1),
+              height 430ms cubic-bezier(.22,.65,.26,1);
+}
+.device.header-hidden > .topbar {
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.device.header-hidden > .scroller {
+  margin-top: -82px !important;
+  height: calc(100% - 75px) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .device > .topbar, .device > .scroller { transition-duration: 0.01ms !important; }
+}
+
+
+/* Inbox badge alignment: unread counts sit at the message-preview line, not at assignment status. */
+#screen-inbox .chat-list .chat-preview-row {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-width:0;
+  width:100%;
+  min-height:18px;
+  margin-top:3px;
+}
+#screen-inbox .chat-list .chat-preview-row .chat-preview {
+  display:block;
+  flex:1 1 auto;
+  min-width:0;
+  margin:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  line-height:16px;
+}
+#screen-inbox .chat-list .chat-preview-row .unread {
+  flex:0 0 18px;
+  width:18px;
+  height:18px;
+  margin:0;
+  align-self:center;
+}
+#screen-inbox .chat-list .chat-tail {
+  margin-top:2px;
+  min-height:15px;
+  justify-content:flex-start;
+}
+
+
+/* Inbox conversation rows — balanced, compact and consistent at phone widths. */
+#screen-inbox .chat-list .chat {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  min-height:76px;
+  padding:11px 14px;
+  text-align:left;
+}
+#screen-inbox .chat-list .chat-avatar {
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  border-radius:13px;
+  font-size:12px;
+  font-weight:650;
+  align-self:center;
+}
+#screen-inbox .chat-list .chat-body {
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  grid-template-rows:18px 17px 15px;
+  row-gap:3px;
+  min-width:0;
+  flex:1;
+  align-content:center;
+}
+#screen-inbox .chat-list .chat-name {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-width:0;
+  line-height:18px;
+  font-size:12px;
+  font-weight:660;
+}
+#screen-inbox .chat-list .chat-customer {
+  display:block;
+  flex:1 1 0;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:12px;
+  line-height:18px;
+  font-weight:660;
+  color:#18191e;
+}
+#screen-inbox .chat-list .chat-name time {
+  flex:0 0 auto;
+  font-size:10px;
+  color:#9596a4;
+  font-weight:420;
+  line-height:16px;
+  margin:0;
+  white-space:nowrap;
+}
+#screen-inbox .chat-list .chat-preview-row {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  height:17px;
+  min-height:17px;
+  margin:0;
+  width:100%;
+  min-width:0;
+}
+#screen-inbox .chat-list .chat-preview-row .chat-preview {
+  display:block;
+  flex:1 1 0;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:10.8px;
+  line-height:17px;
+  font-weight:400;
+  color:#898a98;
+  margin:0;
+}
+#screen-inbox .chat-list .chat-preview-row .unread {
+  flex:0 0 18px;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  margin:0;
+  font-size:10px;
+  line-height:1;
+  align-self:center;
+}
+#screen-inbox .chat-list .chat-tail {
+  display:flex;
+  align-items:center;
+  min-height:15px;
+  height:15px;
+  margin:0;
+  justify-content:flex-start;
+}
+#screen-inbox .chat-list .chat-tail > span:first-child {
+  font-size:10px;
+  font-weight:620;
+  line-height:15px;
+  letter-spacing:0;
+  color:#747783;
+}
+@media(max-width:340px){
+  #screen-inbox .chat-list .chat{padding-inline:11px;gap:10px}
+  #screen-inbox .chat-list .chat-avatar{width:38px;height:38px;flex-basis:38px}
+  #screen-inbox .chat-list .chat-name time{font-size:9px}
+}
+
+</style>
+</head>
+<body>
+<!-- Inline vector symbols: standalone preview, no icon library or external assets required. -->
+<svg aria-hidden="true" style="display:none" xmlns="http://www.w3.org/2000/svg">
+<symbol id="ic-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10Z"/><path d="M9 21v-7h6v7"/></symbol>
+<symbol id="ic-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+<symbol id="ic-message" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 9 9 0 0 1-4-.9L3 21l1.9-5.5a8.5 8.5 0 1 1 16.1-4Z"/><path d="M8 10h8M8 14h6"/></symbol>
+<symbol id="ic-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M17 11a3 3 0 0 0 0-6M18 15a6 6 0 0 1 3 5v1"/></symbol>
+<symbol id="ic-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+<symbol id="ic-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="15" rx="3"/><path d="M3 9V6a3 3 0 0 1 3-3h12"/><path d="M16 12h5v5h-5a2.5 2.5 0 0 1 0-5Z"/><path d="M16 14.5h.01"/></symbol>
+<symbol id="ic-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+<symbol id="ic-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="ic-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 17v3h16v-3"/></symbol>
+<symbol id="ic-flow" viewBox="0 0 24 24"><rect x="2" y="3" width="7" height="6" rx="1"/><rect x="15" y="3" width="7" height="6" rx="1"/><rect x="8" y="15" width="8" height="6" rx="1"/><path d="M5.5 9v3h13V9M12 12v3"/></symbol>
+<symbol id="ic-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+<symbol id="ic-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol>
+<symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></symbol>
+<symbol id="ic-back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+<symbol id="ic-chart" viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 16v-6M13 16V6M18 16v-9"/></symbol>
+<symbol id="ic-template" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/><path d="M14 2v6h6M8 12h8M8 16h8"/></symbol>
+<symbol id="ic-settings" viewBox="0 0 24 24"><path d="M12 2 14 4l3-.5L18 7l3 2-2 3 2 3-3 2-1 3.5-3-.5-2 2-2-2-3 .5L6 17l-3-2 2-3-2-3 3-2 1-3.5 3 .5 2-2Z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="ic-megaphone" viewBox="0 0 24 24"><path d="M3 10v4c0 1.1.9 2 2 2h3l2.2 4H13l-2-4h2l8-4V8l-8-4-8 4H5c-1.1 0-2 .9-2 2Z"/><path d="M21 8v8M6 16v4"/></symbol>
+<symbol id="ic-agent" viewBox="0 0 24 24"><path d="M3 14v-2a9 9 0 0 1 18 0v2M3 13h4v7H5a2 2 0 0 1-2-2v-5ZM21 13h-4v7h2a2 2 0 0 0 2-2v-5ZM16 21c-1 1-3 1-4 1"/></symbol>
+<symbol id="ic-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></symbol>
+<symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v7c0 6 4.3 9 8 10 3.7-1 8-4 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="ic-alert" viewBox="0 0 24 24"><path d="M12 3 2 21h20L12 3ZM12 10v5M12 18h.01"/></symbol>
+<symbol id="ic-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+</svg>
+<div class="demo-layout">
+  <aside class="showcase" aria-label="About this prototype">
+    <div class="eyebrow"><i></i> GREENLEAF MOBILE</div>
+    <h1>Your business.<br>In your <em>pocket.</em></h1>
+    <p>A mobile-first dashboard for WhatsApp campaigns, customer conversations, contacts and automation. Inspired by your clean Fieldex reference and GreenLeaf brand.</p>
+    <div class="tags"><span>Native-style layout</span><span>Touch-friendly</span><span>5 tabs + Billing</span><span>Light + lime aesthetic</span></div>
+    <div class="instruction"><svg class="ico"><use href="#ic-arrow"></use></svg> Tap the tabs inside the phone to explore the design</div>
+  </aside>
+  <div class="device" id="device">
+    <header class="topbar" id="appTopbar">
+      <div class="blinkit-workspace" aria-label="Luxe Lavender Salon and Spa workspace">
+        <div class="blinkit-business">Luxe Lavender</div>
+        <button class="blinkit-location" type="button" data-sheet="workspace" aria-label="Current workspace: Luxe Lavender Salon and Spa">SALON &amp; SPA <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg></button>
+      </div>
+      <div class="header-actions blinkit-actions">
+        <button class="blinkit-wallet" type="button" title="Wallet" aria-label="Open wallet, demo balance one thousand rupees" data-open-billing>
+          <span class="blinkit-wallet-disc"><svg class="wallet-cash" viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(-18 32 32)"><rect x="14" y="18" width="37" height="35" rx="5" fill="#f6c73b"/><rect x="11" y="14" width="37" height="35" rx="5" fill="#ebd63c"/><rect x="8" y="11" width="37" height="35" rx="5" fill="#80ce3a"/><path d="M14 22h25M14 28h25M14 34h25" stroke="#247943" opacity=".5" stroke-width="2"/></g><text x="30" y="34" text-anchor="middle" font-size="20" font-weight="900" fill="#134a28" transform="rotate(-18 30 34)">₹</text></svg></span>
+          <span class="blinkit-wallet-balance">₹1000</span>
+        </button>
+        <button class="blinkit-avatar" type="button" title="Your profile" aria-label="Open profile" data-page="more"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="16" r="9" fill="currentColor"/><path d="M7 43c.5-11 7.3-17.5 17-17.5S40.5 32 41 43" fill="currentColor"/></svg></button>
+      </div>
+    </header>
+    <main class="scroller" id="scroller">
+      <section class="page active" id="screen-home" aria-label="Home dashboard">
+        <div class="home-summary-head"><h2>Overview</h2><span class="home-connected"><i aria-hidden="true"></i> Connected</span></div>
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-top">Messages sent <svg class="ico" style="color:#a275ed"><use href="#ic-send"></use></svg></div><div class="kpi-value">2,988</div><div class="kpi-bottom"><span class="pill purple">Meta sent</span></div></div>
+          <div class="kpi"><div class="kpi-top">Delivered <svg class="ico" style="color:#BCF14A"><use href="#ic-check"></use></svg></div><div class="kpi-value">2,720</div><div class="kpi-bottom"><span class="pill lime">Delivered</span></div></div>
+          <div class="kpi"><div class="kpi-top">Read <svg class="ico" style="color:#000000"><use href="#ic-eye"></use></svg></div><div class="kpi-value">743</div><div class="kpi-bottom"><span class="pill navy">Opened</span></div></div>
+          <div class="kpi"><div class="kpi-top">Failed <svg class="ico" style="color:#ed856d"><use href="#ic-alert"></use></svg></div><div class="kpi-value">1,611</div><div class="kpi-bottom"><span class="pill coral">Failed</span></div></div>
+        </div>
+        <div class="section-head"><h3>Quick actions</h3></div>
+        <div class="quick-row">
+          <button class="quick" data-sheet="agents"><span class="quick-icon gr"><svg class="ico"><use href="#ic-agent"></use></svg></span>Agents</button>
+          <button class="quick" data-sheet="templates"><span class="quick-icon pp"><svg class="ico"><use href="#ic-template"></use></svg></span>Templates</button>
+          <button class="quick" data-sheet="metaAds" aria-label="Meta Ads"><span class="quick-icon bl meta-ads-icon"><svg class="meta-infinity" viewBox="0 0 56 36" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="meta-ads-mark" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0078FF"/><stop offset=".55" stop-color="#1676E9"/><stop offset="1" stop-color="#0866FF"/></linearGradient></defs><path d="M5 27C8 16 13 6 20 6c8 0 12 21 18 21 6 0 11-10 11-15 0-4-2-6-5-6-8 0-14 21-24 21-5 0-8-5-8-10" fill="none" stroke="url(#meta-ads-mark)" stroke-width="5.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Meta Ads</button>
+          <button class="quick" data-sheet="workflow"><span class="quick-icon or"><svg class="ico"><use href="#ic-flow"></use></svg></span>Workflow</button>
+        </div>
+        <div class="section-head"><h3>Messaging performance</h3><button class="text-action" data-sheet="reports">Details <svg class="ico"><use href="#ic-arrow"></use></svg></button></div>
+        <div class="panel">
+          <div class="panel-heading"><div><h3>Monthly overview</h3><p>Message activity by month</p></div><div class="toggle-group"><button class="mini-toggle active" data-range="6" aria-pressed="true">6M</button><button class="mini-toggle" data-range="12" aria-pressed="false">12M</button></div></div>
+          <div class="chart" aria-label="Illustrative month-wise Sent Delivered Read Failed counts"><div class="chart-plot" id="chartPlot"><span class="chart-y y3">1.2k</span><span class="chart-y y2">800</span><span class="chart-y y1">400</span><span class="chart-y">0</span></div><div class="month-labels" id="monthLabels"></div></div>
+          <div class="chart-legend"><span class="legend-item sent"><i></i>Sent</span><span class="legend-item delivered"><i></i>Delivered</span><span class="legend-item read"><i></i>Read</span><span class="legend-item failed"><i></i>Failed</span></div>
+          
+        </div>
+        <div class="section-head"><h3>Recent campaigns</h3><button class="text-action" data-page="campaigns">View all <svg class="ico"><use href="#ic-arrow"></use></svg></button></div>
+        <div class="campaign-card"><div class="campaign-head"><div><strong>Utility follow-up</strong><small>951 recipients · Utility template</small></div><span class="badge">In progress</span></div><div class="campaign-progress"><div class="progress-track"><div class="progress-fill" style="width:55.7%"></div></div><span class="progress-num">56%</span></div><div class="campaign-detail"><div><strong>292</strong><small>Sent</small></div><div><strong>219</strong><small>Delivered</small></div><div><strong>18</strong><small>Read</small></div><div><strong>238</strong><small>Failed</small></div></div></div>
+        <div class="campaign-card"><div class="campaign-head"><div><strong>Marketing campaign</strong><small>958 recipients · Marketing template</small></div><span class="badge">In progress</span></div><div class="campaign-progress"><div class="progress-track"><div class="progress-fill" style="width:90.9%"></div></div><span class="progress-num">91%</span></div><div class="campaign-detail"><div><strong>382</strong><small>Sent</small></div><div><strong>308</strong><small>Delivered</small></div><div><strong>21</strong><small>Read</small></div><div><strong>576</strong><small>Failed</small></div></div></div>
+        <div class="section-head"><h3>Support inbox</h3></div><div class="support"><div><h3>Active conversations</h3><strong>416</strong><p>Customer conversations</p></div><button data-page="inbox">Open inbox ↗</button></div>
+      </section>
+      <section class="page" id="screen-campaigns" aria-label="Campaigns">
+        <div class="screen-head compact-screen-head"><div class="row"><h2>Campaigns</h2><button class="filled-btn" data-sheet="newCampaign"><svg class="ico"><use href="#ic-plus"></use></svg>New</button></div></div>
+        <label class="searchbox"><svg class="ico sm"><use href="#ic-search"></use></svg><input type="search" placeholder="Search campaigns" id="campaignSearch" aria-label="Search campaigns"></label>
+        <div class="segmented" id="campaignFilters"><button class="active" data-filter="all">All</button><button data-filter="inprogress">In progress</button><button data-filter="completed">Completed</button></div>
+        <div id="campaignList">
+          <div class="campaign-card" data-status="inprogress" data-search="utility follow-up"><div class="campaign-head"><div><strong>Utility follow-up</strong><small>951 recipients · Utility template</small></div><span class="badge">In progress</span></div><div class="campaign-progress"><div class="progress-track"><div class="progress-fill" style="width:55.7%"></div></div><span class="progress-num">56%</span></div><div class="campaign-detail"><div><strong>292</strong><small>Sent</small></div><div><strong>219</strong><small>Delivered</small></div><div><strong>18</strong><small>Read</small></div><div><strong>238</strong><small>Failed</small></div></div></div>
+          <div class="campaign-card" data-status="inprogress" data-search="marketing campaign"><div class="campaign-head"><div><strong>Marketing campaign</strong><small>958 recipients · Marketing template</small></div><span class="badge">In progress</span></div><div class="campaign-progress"><div class="progress-track"><div class="progress-fill" style="width:90.9%"></div></div><span class="progress-num">91%</span></div><div class="campaign-detail"><div><strong>382</strong><small>Sent</small></div><div><strong>308</strong><small>Delivered</small></div><div><strong>21</strong><small>Read</small></div><div><strong>576</strong><small>Failed</small></div></div></div>
+          <div class="campaign-card" data-status="completed" data-search="welcome message"><div class="campaign-head"><div><strong>Welcome message</strong><small>148 recipients · Utility template</small></div><span class="badge completed">Completed</span></div><div class="campaign-progress"><div class="progress-track"><div class="progress-fill" style="width:100%"></div></div><span class="progress-num">100%</span></div><div class="campaign-detail"><div><strong>146</strong><small>Sent</small></div><div><strong>139</strong><small>Delivered</small></div><div><strong>61</strong><small>Read</small></div><div><strong>2</strong><small>Failed</small></div></div></div>
+        </div>
+        <p style="font-size:10px;color:#9b98a4;padding:3px 5px">Sample campaigns shown for interface demonstration.</p>
+      </section>
+      <section class="page" id="screen-inbox" aria-label="Inbox">
+        <div class="screen-head compact-screen-head"><div class="row"><h2>Inbox</h2><span class="inline-count"><i aria-hidden="true"></i>416 active</span></div></div>
+        <label class="searchbox"><svg class="ico sm"><use href="#ic-search"></use></svg><input type="search" id="chatSearch" placeholder="Search messages or customers" aria-label="Search messages"></label>
+        <div class="segmented" id="chatFilters"><button class="active" data-filter="all">All</button><button data-filter="unassigned">Unassigned</button><button data-filter="mine">Assigned to me</button></div>
+        <div class="chat-list" id="chatList">
+          <button class="chat" data-assignment="unassigned" data-search="customer 01 spa booking"><span class="chat-avatar gr">C1</span><span class="chat-body"><span class="chat-name"><strong class="chat-customer">Customer 01</strong><time>10:32 AM</time></span><span class="chat-preview-row"><span class="chat-preview">Hi, is the spa available today?</span><span class="unread">2</span></span><span class="chat-tail"><span>Unassigned</span></span></span></button>
+          <button class="chat" data-assignment="mine" data-search="customer 02 price"><span class="chat-avatar">C2</span><span class="chat-body"><span class="chat-name"><strong class="chat-customer">Customer 02</strong><time>09:58 AM</time></span><span class="chat-preview-row"><span class="chat-preview">Thank you! Please share the price.</span></span><span class="chat-tail"><span>Assigned to you</span></span></span></button>
+          <button class="chat" data-assignment="unassigned" data-search="customer 03 subscription"><span class="chat-avatar bl">C3</span><span class="chat-body"><span class="chat-name"><strong class="chat-customer">Customer 03</strong><time>Yesterday</time></span><span class="chat-preview-row"><span class="chat-preview">I'd like to know about the services.</span><span class="unread">1</span></span><span class="chat-tail"><span>Unassigned</span></span></span></button>
+          <button class="chat" data-assignment="mine" data-search="customer 04 appointment"><span class="chat-avatar gr">C4</span><span class="chat-body"><span class="chat-name"><strong class="chat-customer">Customer 04</strong><time>Yesterday</time></span><span class="chat-preview-row"><span class="chat-preview">Appointment confirmed for tomorrow.</span></span><span class="chat-tail"><span>Assigned to you</span></span></span></button>
+        </div>
+      </section>
+      <section class="page" id="screen-leads" aria-label="Leads and contacts">
+        <div class="screen-head compact-screen-head"><div class="row"><h2>Contacts</h2><button class="filled-btn" data-sheet="import"><svg class="ico"><use href="#ic-plus"></use></svg>Import</button></div></div>
+        <div class="lead-summary"><div class="summarybox"><strong>12</strong><span>Saved contacts</span></div><div class="summarybox"><strong>416</strong><span>Conversations</span></div></div>
+        <label class="searchbox"><svg class="ico sm"><use href="#ic-search"></use></svg><input type="search" placeholder="Search contacts" id="leadSearch" aria-label="Search contacts"></label>
+        <div class="segmented" id="leadFilters"><button class="active" data-filter="all">All</button><button data-filter="subscribed">Subscribed</button><button data-filter="unsubscribed">Unsubscribed</button></div>
+        <div class="lead-list" id="leadList">
+          <div class="lead-row" data-consent="subscribed" data-search="customer 01"><span class="person">C1</span><div class="details"><strong>Customer 01</strong><small>WhatsApp contact</small></div><span class="consent">Subscribed</span></div>
+          <div class="lead-row" data-consent="pending" data-search="customer 02"><span class="person">C2</span><div class="details"><strong>Customer 02</strong><small>WhatsApp contact</small></div><span class="consent pending">No opt-in</span></div>
+          <div class="lead-row" data-consent="unsubscribed" data-search="customer 03"><span class="person">C3</span><div class="details"><strong>Customer 03</strong><small>WhatsApp contact</small></div><span class="consent off">Unsubscribed</span></div>
+          <div class="lead-row" data-consent="subscribed" data-search="customer 04"><span class="person">C4</span><div class="details"><strong>Customer 04</strong><small>WhatsApp contact</small></div><span class="consent">Subscribed</span></div>
+          <div class="lead-row" data-consent="pending" data-search="customer 05"><span class="person">C5</span><div class="details"><strong>Customer 05</strong><small>WhatsApp contact</small></div><span class="consent pending">No opt-in</span></div>
+        </div>
+        <p style="font-size:10px;color:#9b98a4;line-height:1.5;padding:3px 5px">Consent badges are demonstration statuses, not verified customer records.</p>
+      </section>
+      <section class="page" id="screen-more" aria-label="More tools">
+        <div class="screen-head compact-screen-head"><div class="row"><h2>More</h2></div></div>
+        <div class="more-label">Account</div><div class="more-group">
+          <button class="more-link" data-open-billing><span class="mi"><svg class="ico"><use href="#ic-card"></use></svg></span>Plan & billing<svg class="ico sm arrow"><use href="#ic-chevron"></use></svg></button>
+          <button class="more-link" data-sheet="api"><span class="mi"><svg class="ico"><use href="#ic-settings"></use></svg></span>WhatsApp API settings<svg class="ico sm arrow"><use href="#ic-chevron"></use></svg></button>
+          <button class="more-link" data-sheet="security"><span class="mi"><svg class="ico"><use href="#ic-shield"></use></svg></span>Privacy & security<svg class="ico sm arrow"><use href="#ic-chevron"></use></svg></button>
+        </div>
+      </section>
+
+      <section class="page" id="screen-billing" aria-label="Billing and subscription">
+        <div class="bill-titlebar">
+          <button class="bill-back" type="button" id="billingBack" aria-label="Back to More"><svg class="ico"><use href="#ic-back"></use></svg></button>
+          <h2>Billing</h2><span class="bill-title-tag">My account</span>
+        </div>
+        <div class="bill-summary">
+          <div class="bill-summary-top"><span class="bill-orb"><svg class="ico"><use href="#ic-card"></use></svg></span> YOUR MEMBERSHIP</div>
+          <div class="bill-summary-mid"><strong>Basic</strong><span class="bill-mini-pill">Active · Monthly</span></div>
+          <div class="bill-summary-detail">Your GreenLeaf subscription</div>
+          <div class="bill-summary-bottom">
+            <div class="bill-renew-meta"><span>RENEWS / VALID UNTIL</span><strong>09 Nov 2026 <em>· 11 days left</em></strong></div>
+            <button type="button" class="bill-manage-btn" data-billing-tab="plans">Manage plan <svg class="ico"><use href="#ic-arrow"></use></svg></button>
+          </div>
+        </div>
+        <div class="bill-overview-row">
+          <div class="bill-overview-card">
+            <div class="bill-overview-label"><span class="bill-overview-icon"><svg class="ico"><use href="#ic-wallet"></use></svg></span> Token balance</div>
+            <div class="bill-overview-value">486.64</div><div class="bill-overview-caption">Available messaging tokens</div>
+            <div class="bill-overview-footer"><button type="button" class="bill-inline-action" data-billing-action="Buy tokens">Top up ↗</button></div>
+          </div>
+          <div class="bill-overview-card">
+            <div class="bill-overview-label"><span class="bill-overview-icon"><svg class="ico"><use href="#ic-chart"></use></svg></span> Monthly usage</div>
+            <div class="bill-overview-value">3,278</div><div class="bill-overview-caption">of 10,000 templates</div>
+            <div class="bill-overview-usage-track" aria-label="32.78 percent of monthly allowance used"><div style="width:32.78%"></div></div>
+          </div>
+        </div>
+        
+        <div class="bill-tabs" role="tablist" aria-label="Billing sections">
+          <button type="button" role="tab" aria-selected="true" class="selected" data-billing-tab="plans">Plans</button>
+          <button type="button" role="tab" aria-selected="false" data-billing-tab="capacity">Add-ons</button>
+          <button type="button" role="tab" aria-selected="false" data-billing-tab="history">Activity</button>
+        </div>
+        <div class="bill-tab-panel active" id="bill-panel-plans" role="tabpanel">
+          <div class="bill-plans-toolbar">
+            <h3>Choose your plan</h3>
+            <div class="bill-period" role="group" aria-label="Billing cycle">
+              <div><button class="selected" data-billing-period="Monthly">Monthly</button><button data-billing-period="Quarterly">Quarterly</button><button data-billing-period="Yearly">Yearly</button></div>
+            </div>
+          </div>
+          
+          <div class="bill-plan-option current">
+            <div class="bill-option-head"><div><h4>Basic</h4><span class="bill-current-tag">CURRENT PLAN</span></div><div class="bill-option-price"><strong>₹1,500</strong><small>per month</small></div></div>
+            <div class="bill-option-summary"><span>10k templates</span><span>3 agents</span><span>1 workflow</span></div>
+            <button class="bill-features-toggle" data-billing-expand="basic" aria-expanded="false">What's included <svg class="ico sm"><use href="#ic-chevron"></use></svg></button>
+            <div class="bill-features" id="bill-features-basic" hidden><p>Unlimited saved contacts</p><p>First 1,000 service replies free each month, then plan token rate</p><p>50 included tokens</p></div>
+            <button class="bill-plan-cta current" data-billing-action="Extend Basic">Extend current plan</button>
+          </div>
+          <div class="bill-plan-option">
+            <div class="bill-option-head"><div><h4>Premium</h4></div><div class="bill-option-price"><strong>₹3,200</strong><small>per month</small></div></div>
+            <div class="bill-option-summary"><span>Unlimited templates</span><span>5 agents</span><span>3 workflows</span></div>
+            <button class="bill-features-toggle" data-billing-expand="premium" aria-expanded="false">What's included <svg class="ico sm"><use href="#ic-chevron"></use></svg></button>
+            <div class="bill-features" id="bill-features-premium" hidden><p>Unlimited saved contacts</p><p>First 1,000 service replies free each month, then plan token rate</p><p>50 included tokens</p></div>
+            <button class="bill-plan-cta" data-billing-action="Switch to Premium">Switch to Premium</button>
+          </div>
+          <div class="bill-plan-option">
+            <div class="bill-option-head"><div><h4>Pro</h4></div><div class="bill-option-price"><strong>₹9,100</strong><small>per month</small></div></div>
+            <div class="bill-option-summary"><span>Unlimited templates</span><span>10 agents</span><span>5 workflows</span></div>
+            <button class="bill-features-toggle" data-billing-expand="pro" aria-expanded="false">What's included <svg class="ico sm"><use href="#ic-chevron"></use></svg></button>
+            <div class="bill-features" id="bill-features-pro" hidden><p>Unlimited saved contacts</p><p>First 1,000 service replies free each month, then plan token rate</p><p>50 included tokens</p></div>
+            <button class="bill-plan-cta" data-billing-action="Switch to Pro">Switch to Pro</button>
+          </div>
+          <button class="bill-rate-link" data-billing-action="Message token rates"><svg class="ico sm"><use href="#ic-wallet"></use></svg> Message token rates <svg class="ico sm"><use href="#ic-chevron"></use></svg></button>
+        </div>
+        <div class="bill-tab-panel" id="bill-panel-capacity" role="tabpanel" hidden>
+          <div class="bill-section-head"><div><h3>Grow your workspace</h3><p>More capacity, whenever you need it</p></div><span class="bill-section-icon"><svg class="ico"><use href="#ic-plus"></use></svg></span></div>
+          <div class="bill-addon"><span class="bill-addon-icon"><svg class="ico"><use href="#ic-flow"></use></svg></span><div class="bill-addon-main"><h4>Workflow slots</h4><div class="bill-addon-count">0 of 1 <span>active slots used</span></div><div class="bill-addon-track"><i style="width:0%"></i></div><p>One workflow slot is included in your plan.</p><div class="bill-addon-bottom"><strong>₹500 <small>/ month per extra</small></strong><button data-billing-action="Add workflow slot">+ Add slot</button></div></div></div>
+          <div class="bill-addon"><span class="bill-addon-icon"><svg class="ico"><use href="#ic-agent"></use></svg></span><div class="bill-addon-main"><h4>Team seats</h4><div class="bill-addon-count">1 of 3 <span>agent seats used</span></div><div class="bill-addon-track"><i style="width:33.33%"></i></div><p>Your plan includes three team seats.</p><div class="bill-addon-bottom"><strong>₹500 <small>/ month per extra</small></strong><button data-billing-action="Add agent seat">+ Add seat</button></div></div></div>
+          
+        </div>
+        <div class="bill-tab-panel" id="bill-panel-history" role="tabpanel" hidden>
+          <div class="bill-section-head"><div><h3>Account activity</h3><p>Payments and messaging token usage</p></div></div>
+          <div class="bill-history-card">
+            <button type="button" class="bill-history-row" data-billing-accordion="payments" aria-expanded="false"><span class="bill-history-icon"><svg class="ico sm"><use href="#ic-card"></use></svg></span><span><strong>Payments</strong><small>0 recent transactions</small></span><svg class="ico sm"><use href="#ic-chevron"></use></svg></button>
+            <div class="bill-history-body" id="bill-accordion-payments" hidden><div class="bill-empty">No payment records are available in this preview.</div></div>
+          </div>
+          <div class="bill-history-card">
+            <button type="button" class="bill-history-row" data-billing-accordion="tokens" aria-expanded="false"><span class="bill-history-icon"><svg class="ico sm"><use href="#ic-wallet"></use></svg></span><span><strong>Token usage</strong><small>24 recent usage entries</small></span><svg class="ico sm"><use href="#ic-chevron"></use></svg></button>
+            <div class="bill-history-body" id="bill-accordion-tokens" hidden><div class="bill-empty">Your screenshot indicates 24 recent usage entries. Detailed usage data will appear when connected.</div></div>
+          </div>
+          
+        </div>
+        
+      </section>
+    </main>
+    <div id="conversation" class="conversation" style="position:absolute;inset:0 0 75px;z-index:8" aria-label="Demo conversation">
+      <div class="conversation-top"><button class="icon-plain" id="chatBack" aria-label="Back to inbox"><svg class="ico"><use href="#ic-back"></use></svg></button><span class="chat-avatar gr" style="width:34px;height:34px;border-radius:10px" id="conversationInitials">C1</span><div><strong id="conversationName">Customer 01</strong><small>Unassigned · WhatsApp</small></div></div>
+      <div class="conversation-messages" id="conversationMessages"><div class="bubble them">Hi, is the spa available today?<small>10:32 AM</small></div><div class="bubble me">Hi! Thanks for contacting us. How can we help?<small>10:33 AM · Demo</small></div></div>
+      <form class="reply-bar" id="replyForm"><input id="replyInput" placeholder="Type a message..." aria-label="Message (local preview only)" autocomplete="off"><button class="send-button" type="submit" aria-label="Add preview message"><svg class="ico"><use href="#ic-send"></use></svg></button></form>
+    </div>
+    <nav class="bottom-nav" aria-label="Mobile app navigation">
+      <button class="nav-item active" data-page="home" aria-label="Home"><span class="nav-icon"><svg class="ico"><use href="#ic-home"></use></svg></span><span class="nav-label">Home</span></button>
+      <button class="nav-item" data-page="campaigns" aria-label="Campaigns"><span class="nav-icon"><svg class="ico"><use href="#ic-send"></use></svg></span><span class="nav-label">Campaigns</span></button>
+      <button class="nav-item" data-page="inbox" aria-label="Inbox, 3 unread"><span class="nav-icon"><svg class="ico"><use href="#ic-message"></use></svg></span><span class="nav-label">Inbox</span><span class="nav-dot">3</span></button>
+      <button class="nav-item" data-page="leads" aria-label="Contacts"><span class="nav-icon"><svg class="ico"><use href="#ic-users"></use></svg></span><span class="nav-label">Contacts</span></button>
+      <button class="nav-item" data-page="more" aria-label="More"><span class="nav-icon"><svg class="ico"><use href="#ic-more"></use></svg></span><span class="nav-label">More</span></button>
+    </nav>
+    <div class="modal-overlay" id="modalOverlay"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="sheet-handle"></div><h3 id="modalTitle">Coming soon</h3><p id="modalText">Preview only.</p><button class="sheet-btn" id="modalDismiss">Got it</button></div></div>
+    <div class="toast" id="toast" role="status">Preview only — nothing was sent.</div>
+  </div>
+</div>
+<script>
+(()=>{
+  const scroller=document.getElementById('scroller');
+  const appDevice=document.querySelector('.device');
+  let previousScrollY=0;
+  let directionTravel=0;
+  function restoreHeader(){
+    appDevice.classList.remove('header-hidden');
+    previousScrollY=scroller.scrollTop;
+    directionTravel=0;
+  }
+  scroller.addEventListener('scroll',()=>{
+    const currentY=scroller.scrollTop;
+    const movement=currentY-previousScrollY;
+    previousScrollY=currentY;
+    if(currentY<=8){restoreHeader();return;}
+    if(Math.abs(movement)<1.5)return;
+    // Accumulate deliberate scrolling, ignoring tiny inertial jitters.
+    if((movement>0)!==(directionTravel>0))directionTravel=0;
+    directionTravel+=movement;
+    if(directionTravel>25 && currentY>58){
+      appDevice.classList.add('header-hidden');
+      directionTravel=0;
+    }else if(directionTravel< -14){
+      appDevice.classList.remove('header-hidden');
+      directionTravel=0;
+    }
+  },{passive:true});
+  const screenNames=['home','campaigns','inbox','leads','more','billing'];
+  function showPage(name){if(!screenNames.includes(name))return;document.getElementById('conversation').classList.remove('open');document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='screen-'+name));document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.page===(name==='billing'?'more':name)));scroller.scrollTop=0;restoreHeader();}
+  window.showPage=showPage;
+  document.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>showPage(button.dataset.page)));
+  const content={
+    wallet:['Wallet','The ₹1000 shown in the header is an illustrative balance, not a live wallet value. In the connected app, you can view your messaging-token balance and transactions here.'],
+    workspace:['Current workspace','Luxe Lavender Salon & Spa is the selected business. In the connected mobile app, this menu could let you switch between your authorized workspaces.'],
+    newCampaign:['Create a campaign','In the final app, this starts a WhatsApp template campaign with recipient selection and consent checks. No campaign is created in this preview.'],
+    import:['Import contacts','In the final app, this opens a contact import flow. Imported contacts should not automatically be marked as having marketing opt-in.'],
+    workflow:['Workflows','Open the workflow manager, edit your automation and view workflow activity. This prototype shows the navigation concept only.'],
+    reports:['Messaging reports','The monthly chart is illustrative. Your production app would load historical message events from your own reporting database.'],
+    agents:['Agents & assignments','In the real app, assign conversations to your team and view support workload.'],
+    templates:['Message templates','View approved Meta templates, media previews and template status here.'],
+    metaAds:['Meta Ads','View or connect Meta lead campaigns and manage incoming leads here. This is a design preview; no Meta Ads account is connected.'],
+    plan:['Plan & billing','Review subscription and billing details in the connected GreenLeaf platform.'],
+    api:['WhatsApp API settings','Manage your connected WhatsApp Business account and webhook status.'],
+    security:['Privacy & security','Configure account and workspace permissions.']
+  };
+  let overlay=document.getElementById('modalOverlay');
+  function openSheet(key){const [title,description]=content[key]||['Preview feature','This feature is represented as a design-only interaction.'];document.getElementById('modalTitle').textContent=title;document.getElementById('modalText').textContent=description;overlay.classList.add('show')}
+
+  document.querySelectorAll('[data-open-billing]').forEach(b=>b.addEventListener('click',()=>showPage('billing')));
+  document.getElementById('billingBack').addEventListener('click',()=>showPage('more'));
+  function selectBillingTab(name){
+    document.querySelectorAll('[data-billing-tab]').forEach(b=>{b.classList.toggle('selected',b.dataset.billingTab===name&&b.getAttribute('role')==='tab');if(b.getAttribute('role')==='tab')b.setAttribute('aria-selected',String(b.dataset.billingTab===name))});
+    document.querySelectorAll('.bill-tab-panel').forEach(p=>{const isActive=p.id==='bill-panel-'+name;p.classList.toggle('active',isActive);p.hidden=!isActive});
+    const screen=document.getElementById('screen-billing');
+    const area=document.getElementById('scroller');
+    screen.classList.toggle('bill-secondary',name!=='plans');
+    requestAnimationFrame(()=>{
+      if(name==='plans'){
+        const tabs=document.querySelector('.bill-tabs');
+        area.scrollTop+=tabs.getBoundingClientRect().top-area.getBoundingClientRect().top-10;
+      }else{area.scrollTop=0;}
+    });
+  }
+  document.querySelectorAll('[data-billing-tab]').forEach(b=>b.addEventListener('click',()=>selectBillingTab(b.dataset.billingTab)));
+  document.querySelectorAll('[data-billing-period]').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-billing-period]').forEach(x=>x.classList.toggle('selected',x===b));
+    // Keep the billing-period selection visible without extra explanatory captions.
+  }));
+  document.querySelectorAll('[data-billing-expand]').forEach(b=>b.addEventListener('click',()=>{const el=document.getElementById('bill-features-'+b.dataset.billingExpand);el.hidden=!el.hidden;b.setAttribute('aria-expanded',String(!el.hidden))}));
+  document.querySelectorAll('[data-billing-accordion]').forEach(b=>b.addEventListener('click',()=>{const el=document.getElementById('bill-accordion-'+b.dataset.billingAccordion);el.hidden=!el.hidden;b.setAttribute('aria-expanded',String(!el.hidden))}));
+  document.querySelectorAll('[data-billing-action]').forEach(b=>b.addEventListener('click',()=>{
+    const key=b.dataset.billingAction;
+    const descriptions={
+      'Buy tokens':'Token purchase is not enabled in this HTML prototype. Your original billing screenshot indicates online payments have not been configured.',
+      'Message token rates':'The supplied billing screen lists ₹1.05 per token on the Basic plan. Actual token rates depend on your billing configuration.',
+      'Extend Basic':'Your current Basic monthly plan is shown for reference. This preview cannot extend or charge a plan.',
+      'Switch to Premium':'Premium is ₹3,200/month in the reference. This preview does not change your subscription or charge you.',
+      'Switch to Pro':'Pro is ₹9,100/month in the reference. This preview does not change your subscription or charge you.',
+      'Add workflow slot':'An additional active workflow slot is shown at ₹500/month. No purchase is placed from the preview.',
+      'Add agent seat':'An additional agent seat is shown at ₹500/month. No purchase is placed from the preview.'
+    };
+    document.getElementById('modalTitle').textContent=key;
+    document.getElementById('modalText').textContent=descriptions[key]||'Preview only.';
+    overlay.classList.add('show');
+  }));
+
+  document.querySelectorAll('[data-sheet]').forEach(el=>el.addEventListener('click',()=>openSheet(el.dataset.sheet)));
+  document.getElementById('modalDismiss').addEventListener('click',()=>overlay.classList.remove('show'));
+  overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('show')});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')overlay.classList.remove('show')});
+  const chartData=[
+    ['Nov',580,542,130,59],['Dec',620,578,143,67],['Jan',665,617,148,61],['Feb',704,663,175,52],['Mar',730,699,159,79],['Apr',780,726,180,73],
+    ['May',720,680,152,55],['Jun',805,748,175,65],['Jul',922,860,210,81],['Aug',1050,1000,240,91],['Sep',870,795,190,62],['Oct',1180,1100,309,110]
+  ];
+  function renderChart(n){const plot=document.getElementById('chartPlot');plot.querySelectorAll('.bar-col').forEach(x=>x.remove());const months=document.getElementById('monthLabels');months.innerHTML='';const visible=chartData.slice(-n);visible.forEach(([m,s,d,r,f])=>{const col=document.createElement('div');col.className='bar-col';[['sent',s],['delivered',d],['read',r],['failed',f]].forEach(([kind,value])=>{const b=document.createElement('div');b.className='bar '+kind;b.title=`${m}: ${kind} ${value.toLocaleString()}`;b.style.height=(value/1300*100).toFixed(1)+'%';col.appendChild(b)});plot.appendChild(col);const label=document.createElement('span');label.textContent=m;months.appendChild(label)});document.querySelectorAll('.bar').forEach(b=>b.style.width=(n===12?'4px':'8px'))}
+  document.querySelectorAll('[data-range]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-range]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',String(x===b))});renderChart(Number(b.dataset.range))}));renderChart(6);
+  function setupFilter(buttonContainerId,searchId,listId,elementSelector,kind){const box=document.getElementById(buttonContainerId),input=document.getElementById(searchId),list=document.getElementById(listId);const refresh=()=>{const active=box.querySelector('button.active')?.dataset.filter||'all';const search=input.value.trim().toLowerCase();list.querySelectorAll(elementSelector).forEach(item=>{const status=item.dataset[kind],txt=item.dataset.search||'';item.style.display=(active==='all'||active===status)&&txt.includes(search)?'':'none'})};box.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{box.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));refresh()}));input.addEventListener('input',refresh)}
+  setupFilter('campaignFilters','campaignSearch','campaignList','.campaign-card','status');
+  setupFilter('chatFilters','chatSearch','chatList','.chat','assignment');
+  setupFilter('leadFilters','leadSearch','leadList','.lead-row','consent');
+  document.querySelectorAll('.chat').forEach((btn,i)=>btn.addEventListener('click',()=>{document.getElementById('conversationName').textContent='Customer '+String(i+1).padStart(2,'0');document.getElementById('conversationInitials').textContent='C'+(i+1);document.getElementById('conversationMessages').innerHTML='<div class="bubble them">'+['Hi, is the spa available today?','Thank you! Please share the price.','I would like to know about your services.','Appointment confirmed for tomorrow.'][i]+'<small>10:32 AM</small></div><div class="bubble me">Hi! Thanks for contacting us. How can we help?<small>10:33 AM · Demo</small></div>';document.getElementById('conversation').classList.add('open')}));
+  document.getElementById('chatBack').addEventListener('click',()=>document.getElementById('conversation').classList.remove('open'));
+  document.getElementById('replyForm').addEventListener('submit',e=>{e.preventDefault();const input=document.getElementById('replyInput');let text=input.value.trim();if(!text)return;const bubble=document.createElement('div');bubble.className='bubble me';bubble.textContent=text;const cap=document.createElement('small');cap.textContent='Preview only · Not sent';bubble.appendChild(cap);document.getElementById('conversationMessages').appendChild(bubble);input.value='';document.getElementById('conversationMessages').scrollTop=999999;showToast('Preview only — no WhatsApp message was sent.')});
+  let toastTimeout;function showToast(s){const el=document.getElementById('toast');el.textContent=s;el.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>el.classList.remove('show'),2300)}
+})();
+</script>
+</body>
+</html>

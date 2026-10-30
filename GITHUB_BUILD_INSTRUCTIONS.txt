@@ -1,0 +1,16 @@
+GreenLeaf S25 APK — exact GitHub upload steps
+
+EXISTING REPO: https://github.com/Lasar456/android
+
+A. Extract this ZIP. Do NOT upload the ZIP as a single file.
+B. Go to repository → Code → Add file → Upload files.
+C. Upload assets/ (contains index.html), lib/ (contains main.dart), pubspec.yaml.
+   You may also upload branding/ for a custom launcher icon.
+D. Commit to MAIN branch. Existing .github/workflows/main.yml can build the new Flutter app.
+E. Open Actions → latest green Build GreenLeaf Android APK run → Artifacts.
+F. Download GreenLeaf-Android-APK, extract, install app-debug.apk on S25.
+
+If the action does not run, check that .github/workflows/main.yml exists.
+There is a new workflow file inside the hidden .github folder in this ZIP.
+
+Test preview only. UI and example data do NOT use your live WhatsApp server.
